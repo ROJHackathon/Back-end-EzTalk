@@ -18,7 +18,7 @@ public class Material {
   url,
   isFlashCard;
   private Integer like;
-
+  public Material() {}
   public Material(
       String title,
       String description,

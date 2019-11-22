@@ -11,8 +11,9 @@ class LoadDatabase {
   @Bean
   CommandLineRunner initDatabase(MaterialRepository repository) {
     return args -> {
-      log.info("Preloading " + repository.save(new Material("French I", "an introduction to French", "English", "ROJ", "NONE", "false", 5)));
-      log.info("Preloading " + repository.save(new Material("French II","an introduction to French", "English", "ROJ", "NONE", "false", 27)));
+      //log.info("Preloading " + repository.save(new Material("French I", "an introduction to French", "English", "ROJ", "NONE", "false", 5)));
+      //log.info("Preloading " + repository.save(new Material("French II","an introduction to French", "English", "ROJ", "NONE", "false", 27)));
+      repository.save(new Material("French", "intro to French", "English", "ROJFake", "www.fake.com", "false", 5));
     };
   }
 } */

@@ -4,20 +4,25 @@ import com.roj.eztalk.data.*;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/fake/")
+@RequestMapping("/api-fake/")
 public class FakeController {
-    @RequestMapping("/test-material")
+    @GetMapping("/test-material")
     public Material testMaterial() {
         return new Material("Some Title", "Some Description", "Some Language", "Some Provider", "Some url",
                 "true/false", 0);
     }
 
-    @RequestMapping("/request-feed")
-    public List<Material> fakeFeed() {
+    @GetMapping("/user/{id}/request-feed")
+    public List<Material> fakeFeed(@PathVariable Long id) {
         ArrayList<Material> ret = new ArrayList<>();
         ret.add(new Material("French I", "an intro to French", "French", "ROJFake", "www.fake.com", "false", 179));
         ret.add(new Material("French II", "an intro to French", "French", "ROJFake", "www.fake.com", "false", 86));
@@ -30,10 +35,10 @@ public class FakeController {
         return ret;
     }
 
-    @RequestMapping("/history")
-    public List<String> fakeHistory() {
+    @GetMapping("/user/{id}/history")
+    public List<String> fakeHistory(@PathVariable Long id) {
         ArrayList<String> ret = new ArrayList<>();
-        ret.add("French Tutorial");
+        ret.add("French Tutorial" + id.toString());
         ret.add("French Restaurant");
         ret.add("history of French");
         ret.add("French food");
@@ -42,7 +47,7 @@ public class FakeController {
         return ret;
     }
 
-    @RequestMapping("/top-word")
+    @GetMapping("/top-word")
     public List<String> fakeTopWord() {
         ArrayList<String> ret = new ArrayList<>();
         ret.add("topword1");
@@ -53,30 +58,30 @@ public class FakeController {
         ret.add("topword6");
         return ret;
     }
-    @RequestMapping("/search-material")
-    public List<Material> fakeSearch() {
+    @PostMapping("/search-material")
+    public List<Material> fakeSearch(@RequestBody SearchEntry searchEntry) {
         ArrayList<Material> ret = new ArrayList<>();
-        ret.add(new Material("search result 1", "description 1", "French", "ROJFake", "www.fake.com", "false", 11));
-        ret.add(new Material("search result 2", "description 1", "French", "ROJFake", "www.fake.com", "false", 22));
-        ret.add(new Material("search result 3", "description 1", "French", "ROJFake", "www.fake.com", "false", 33));
-        ret.add(new Material("search result 4", "description 1", "French", "ROJFake", "www.fake.com", "false", 44));
-        ret.add(new Material("search result 5", "description 1", "French", "ROJFake", "www.fake.com", "false", 55));
-        ret.add(new Material("search result 6", "description 1", "French", "ROJFake", "www.fake.com", "false", 66));
+        ret.add(new Material(searchEntry.getText() + " 1", "description 1", "French", "ROJFake", "www.fake.com", "false", 11));
+        ret.add(new Material(searchEntry.getText() + " 2", "description 2", "French", "ROJFake", "www.fake.com", "false", 22));
+        ret.add(new Material(searchEntry.getText() + " 3", "description 3", "French", "ROJFake", "www.fake.com", "false", 33));
+        ret.add(new Material(searchEntry.getText() + " 4", "description 4", "French", "ROJFake", "www.fake.com", "false", 44));
+        ret.add(new Material(searchEntry.getText() + " 5", "description 5", "French", "ROJFake", "www.fake.com", "false", 55));
+        ret.add(new Material(searchEntry.getText() + " 6", "description 6", "French", "ROJFake", "www.fake.com", "false", 66));
         return ret;
     }
 
-    @RequestMapping("/comment")
-    public Integer fakeComment() {
-        return 1;
+    @PostMapping("/material/{id}/comment")
+    public ResponseEntity<String> fakeComment(@RequestBody Comment comment, @PathVariable Long id) {
+        return ResponseEntity.ok(comment.getUser().getName() + " : " + comment.getCotent());
     }
 
-    @RequestMapping("/like")
-    public Integer fakeLike() {
-        return 1;
+    @PostMapping("/material/{id}/like")
+    public ResponseEntity<String> fakeLike(@RequestBody User user, @PathVariable Long id) {
+        return ResponseEntity.ok(user.getName() + " liked " + id.toString());
     }
 
-    @RequestMapping("/get-comment")
-    public List<Comment> gakeGetComment() {
+    @GetMapping("/material/{id}/get-comment")
+    public List<Comment> fakeGetComment() {
         List<Comment> ret = new ArrayList<>();
         ret.add(new Comment("Comment 1", new User("fake user 1")));
         ret.add(new Comment("Comment 2", new User("fake user 2")));

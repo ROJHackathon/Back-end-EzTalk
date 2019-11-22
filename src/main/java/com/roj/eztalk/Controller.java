@@ -1,5 +1,6 @@
 package com.roj.eztalk;
 
+import com.roj.eztalk.data.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,13 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
   @RequestMapping("/test-material")
   public Material testMaterial() {
-      return new Material("Some Title", 
-      "Some Description",
-      "Some Language",
-      "Some Provider",
-      "Some url",
-      "true/false");
+    return new Material("Some Title", "Some Description", "Some Language", "Some Provider", "Some url", "true/false", 0);
   }
-  
 
 }

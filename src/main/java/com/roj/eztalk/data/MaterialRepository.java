@@ -1,4 +1,4 @@
-package com.roj.eztalk;
+package com.roj.eztalk.data;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

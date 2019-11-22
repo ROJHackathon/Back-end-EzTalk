@@ -1,4 +1,4 @@
-package com.roj.eztalk;
+package com.roj.eztalk.data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +17,7 @@ public class Material {
   provider,
   url,
   isFlashCard;
+  private Integer like;
 
   public Material(
       String title,
@@ -24,12 +25,14 @@ public class Material {
       String language,
       String provider,
       String url,
-      String isFlashCard) {
+      String isFlashCard,
+      Integer like) {
     this.title = title;
     this.description = description;
     this.provider = provider;
     this.language = language;
     this.url = url;
     this.isFlashCard = isFlashCard;
+    this.like = like;
   }
 }

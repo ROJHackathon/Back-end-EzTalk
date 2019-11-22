@@ -1,6 +1,7 @@
 package com.roj.eztalk.fake;
 
 import com.roj.eztalk.data.*;
+import com.roj.eztalk.exception.*;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -23,6 +24,9 @@ public class FakeController {
 
     @GetMapping("/user/{id}/request-feed")
     public List<Material> fakeFeed(@PathVariable Long id) {
+        if (id == -1) {
+            throw new UserNotFoundException(id);
+        }
         ArrayList<Material> ret = new ArrayList<>();
         ret.add(new Material("French I", "an intro to French", "French", "ROJFake", "www.fake.com", "false", 179));
         ret.add(new Material("French II", "an intro to French", "French", "ROJFake", "www.fake.com", "false", 86));
@@ -37,6 +41,9 @@ public class FakeController {
 
     @GetMapping("/user/{id}/history")
     public List<String> fakeHistory(@PathVariable Long id) {
+        if (id == -1) {
+            throw new UserNotFoundException(id);
+        }
         ArrayList<String> ret = new ArrayList<>();
         ret.add("French Tutorial" + id.toString());
         ret.add("French Restaurant");
@@ -58,21 +65,33 @@ public class FakeController {
         ret.add("topword6");
         return ret;
     }
+
     @PostMapping("/search-material")
     public List<Material> fakeSearch(@RequestBody SearchEntry searchEntry) {
         ArrayList<Material> ret = new ArrayList<>();
-        ret.add(new Material(searchEntry.getText() + " 1", "description 1", "French", "ROJFake", "www.fake.com", "false", 11));
-        ret.add(new Material(searchEntry.getText() + " 2", "description 2", "French", "ROJFake", "www.fake.com", "false", 22));
-        ret.add(new Material(searchEntry.getText() + " 3", "description 3", "French", "ROJFake", "www.fake.com", "false", 33));
-        ret.add(new Material(searchEntry.getText() + " 4", "description 4", "French", "ROJFake", "www.fake.com", "false", 44));
-        ret.add(new Material(searchEntry.getText() + " 5", "description 5", "French", "ROJFake", "www.fake.com", "false", 55));
-        ret.add(new Material(searchEntry.getText() + " 6", "description 6", "French", "ROJFake", "www.fake.com", "false", 66));
+        ret.add(new Material(searchEntry.getText() + " 1", "description 1", "French", "ROJFake", "www.fake.com",
+                "false", 11));
+        ret.add(new Material(searchEntry.getText() + " 2", "description 2", "French", "ROJFake", "www.fake.com",
+                "false", 22));
+        ret.add(new Material(searchEntry.getText() + " 3", "description 3", "French", "ROJFake", "www.fake.com",
+                "false", 33));
+        ret.add(new Material(searchEntry.getText() + " 4", "description 4", "French", "ROJFake", "www.fake.com",
+                "false", 44));
+        ret.add(new Material(searchEntry.getText() + " 5", "description 5", "French", "ROJFake", "www.fake.com",
+                "false", 55));
+        ret.add(new Material(searchEntry.getText() + " 6", "description 6", "French", "ROJFake", "www.fake.com",
+                "false", 66));
         return ret;
     }
 
     @PostMapping("/material/{id}/comment")
     public ResponseEntity<String> fakeComment(@RequestBody Comment comment, @PathVariable Long id) {
-        return ResponseEntity.ok(comment.getUser().getName() + " : " + comment.getCotent());
+        if (id == -1) {
+            throw new MaterialNotFoundException(id);
+        } else if (comment.getId() == -1) {
+            throw new MaterialNotFoundException(comment.getId());
+        }
+        return ResponseEntity.ok(comment.getUser().getName() + " : " + comment.getContent());
     }
 
     @PostMapping("/material/{id}/like")
@@ -81,7 +100,10 @@ public class FakeController {
     }
 
     @GetMapping("/material/{id}/get-comment")
-    public List<Comment> fakeGetComment() {
+    public List<Comment> fakeGetComment(@PathVariable Long id) {
+        if (id == -1) {
+            throw new MaterialNotFoundException(id);
+        }
         List<Comment> ret = new ArrayList<>();
         ret.add(new Comment("Comment 1", new User("fake user 1")));
         ret.add(new Comment("Comment 2", new User("fake user 2")));

@@ -16,10 +16,13 @@ public class Comment {
         this.user = user;
         this.content = content;
     }
-    public String getCotent(){
+    public String getContent(){
         return this.content;
     }
     public User getUser(){
         return this.user;
+    }
+    public Long getId(){
+        return this.id;
     }
 }

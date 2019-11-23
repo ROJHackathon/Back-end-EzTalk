@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @RestController
 @RequestMapping("/api-fake/")
 public class FakeController {
+    private int counter = 0;
     @GetMapping("/test-material")
     public Material testMaterial() {
         return new Material("Some Title", "Some Description", "Some Language", "Some Provider", "Some url",
@@ -30,14 +31,11 @@ public class FakeController {
             throw new UserNotFoundException(id);
         }
         ArrayList<Material> ret = new ArrayList<>();
-        ret.add(new Material("French I", "an intro to French", "French", "ROJFake", "www.fake.com", "false", 179));
-        ret.add(new Material("French II", "an intro to French", "French", "ROJFake", "www.fake.com", "false", 86));
-        ret.add(new Material("In a French Restaurant", "common used sentence in a French restaurant", "French",
-                "ROJFake", "www.fake.com", "false", 57));
-        ret.add(new Material("French Travel Advice", "advice for tourists", "French", "ROJFake", "www.fake.com",
-                "false", 659));
-        ret.add(new Material("French food", "flash-card of various french dished", "French", "ROJFake", "www.fake.com",
-                "true", 45));
+        ret.add(new Material("Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com", "false", 179));
+        ret.add(new Material("Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com", "false", 179));
+        ret.add(new Material("Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com", "false", 179));
+        ret.add(new Material("Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com", "false", 179));
+        ret.add(new Material("Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com", "false", 179));
         return ret;
     }
 

@@ -16,17 +16,22 @@ public class Material {
   language,
   provider,
   url,
-  isFlashCard;
+  isFlashCard,
+  coverUrl;
   private Integer like;
+  
   public Material() {}
   public Material(
+      Long id,
       String title,
       String description,
       String language,
       String provider,
       String url,
       String isFlashCard,
-      Integer like) {
+      Integer like,
+      String coverUrl) {
+    this.id = id;
     this.title = title;
     this.description = description;
     this.provider = provider;
@@ -34,5 +39,6 @@ public class Material {
     this.url = url;
     this.isFlashCard = isFlashCard;
     this.like = like;
+    this.coverUrl = coverUrl;
   }
 }

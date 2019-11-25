@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class FakeController {
     private int counter = 0;
     @Autowired
-    private AccountInterface account;
+    private Account account;
     @Autowired
     private X5gonService x5gonService;
 
@@ -78,24 +78,39 @@ public class FakeController {
         return account.logout(token);
     }
 
-    @GetMapping("/user/{id}/request-feed")
-    public List<Material> fakeFeed(@RequestParam(value = "page", defaultValue = "1") String page,
-            @PathVariable Integer id) {
-        System.out.println(id);
+    @GetMapping("/request-feed")
+    public List<Material> fakeFeed(@RequestParam Map<String, String> allParams) {
+        String page = allParams.get("page");
+        String token = allParams.get("token");
+        
         try {
-            return x5gonService.recommendMaterial("french", page);
+            String preference = account.getUserByToken(Integer.parseInt(token)).getPreference();
+            return x5gonService.recommendMaterial(preference, page);
         } catch (Exception e) {
             return new ArrayList<Material>();
         }
     }
 
-    @GetMapping("/user/{id}/history")
-    public List<String> fakeHistory(@PathVariable Long id) {
-        if (id == -1) {
-            throw new UserNotFoundException(id);
+    @PostMapping("/set-preference")
+    public String setPreference(@RequestBody SetPreference body, HttpServletResponse response){
+        String token = body.getToken();
+        if(!account.isTokenValid(Integer.parseInt(token))){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
+        String preference = body.getPreference();
+        try{
+        account.setPreference(Integer.parseInt(token), preference);
+        }
+        catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        return "success";
+    }
+
+    @GetMapping("/history")
+    public List<String> fakeHistory(@RequestParam Map<String, String> allParams) {
         ArrayList<String> ret = new ArrayList<>();
-        ret.add("French Tutorial" + id.toString());
+        ret.add("French Tutorial");
         ret.add("French Restaurant");
         ret.add("history of French");
         ret.add("French food");
@@ -165,8 +180,7 @@ public class FakeController {
     public Material fakeGetMaterial(@PathVariable String id, HttpServletResponse response) {
         try {
             return x5gonService.getMaterialById(id);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -174,14 +188,14 @@ public class FakeController {
     }
 
     @PostMapping("/create-chatroom")
-    public Chatroom fakeCreateChatroom(@RequestBody Chatroom rb){
+    public Chatroom fakeCreateChatroom(@RequestBody Chatroom rb) {
         return new Chatroom(1, rb.getName(), rb.getLanguage());
     }
 
     @GetMapping("/chatroom-list")
     public List<Chatroom> fakeGetChatroomList() {
         List<Chatroom> ret = new ArrayList<>();
-        ret.add(new Chatroom(1,"chatroom 1", "english"));
+        ret.add(new Chatroom(1, "chatroom 1", "english"));
         ret.add(new Chatroom(2, "chatroom 2", "french"));
         ret.add(new Chatroom(3, "chatroom 3", "chinese"));
         return ret;
@@ -190,14 +204,14 @@ public class FakeController {
     @GetMapping("/official-chatroom-list")
     public List<Chatroom> fakeGetOfficialChatroomList() {
         List<Chatroom> ret = new ArrayList<>();
-        ret.add(new Chatroom(1,"chatroom 1", "english"));
+        ret.add(new Chatroom(1, "chatroom 1", "english"));
         ret.add(new Chatroom(2, "chatroom 2", "french"));
         ret.add(new Chatroom(3, "chatroom 3", "chinese"));
         return ret;
     }
 
     @GetMapping("/chatroom/{id}")
-    public Chatroom getChatroomById(@PathVariable Integer id){
+    public Chatroom getChatroomById(@PathVariable Integer id) {
         return new Chatroom(1, "ChatroomById", "chinese");
     }
 
@@ -234,16 +248,16 @@ public class FakeController {
     }
 
     @PostMapping("/chatroom/{id}/say")
-    public String fakeSay(@PathVariable Integer id, @RequestBody Message message){
+    public String fakeSay(@PathVariable Integer id, @RequestBody Message message) {
         return "success";
     }
-
 
     public static String generateCoverUrl() {
         String ret = "https://cdn.framework7.io/placeholder/nature-1000x600-%s.jpg";
         Long index = Math.round(Math.random() * 7 + 1);
         return String.format(ret, index.toString());
     }
+
     public static String generateAvatarUrl() {
         String ret = "http://placeimg.com/80/80/people/";
         Long index = Math.round(Math.random() * 99 + 1);

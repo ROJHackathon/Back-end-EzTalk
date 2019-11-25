@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class Account implements AccountInterface {
     private static HashMap<Integer, User> tokenMap = new HashMap<>();
     private static HashMap<Integer, User> userMap = new HashMap<>();
+    private static HashMap<Integer, Integer> uidTokenMap = new HashMap<>();
     static {
     }
 
@@ -53,8 +54,14 @@ public class Account implements AccountInterface {
         }
         int token = getToken(userName);
         Integer uid = nameToId(userName);
+        if(uidTokenMap.containsKey(uid)){
+            int prevToken = uidTokenMap.get(uid);
+            tokenMap.remove(token);
+            uidTokenMap.remove(uid);
+        }
         User user = userMap.get(uid);
         tokenMap.put(token, user);
+        uidTokenMap.put(uid, token);
         return new LoginResponseBody("Login success", token);
     }
 
@@ -88,6 +95,10 @@ public class Account implements AccountInterface {
         return true;
     }
 
+    public boolean isTokenValid(Integer token){
+        return tokenMap.containsKey(token);
+    }
+
     @Override
     public boolean isOnline(Token token) {
         return tokenMap.containsKey(token.getToken());
@@ -103,6 +114,7 @@ public class Account implements AccountInterface {
             uid++;
         }
         User newUser = new User(uid, userName, password);
+        newUser.setPreference("chinese");
         userMap.put(uid, newUser);
         return newUser;
     }
@@ -120,5 +132,14 @@ public class Account implements AccountInterface {
 
     public User getUser(Integer id) {
         return userMap.get(id);
+    }
+
+    public void setPreference(Integer token, String p) throws Exception {
+        User user = tokenMap.get(token);
+        user.setPreference(p);
+    }
+
+    public User getUserByToken(Integer token){
+        return tokenMap.get(token);
     }
 }

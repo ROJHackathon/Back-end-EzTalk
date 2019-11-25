@@ -20,7 +20,7 @@ public class User {
         this.name = name;
         this.password = password;
     }
- 
+
     public User(Integer uid, String name, String password, String avatarUrl) {
         this.id = uid;
         this.name = name;
@@ -51,5 +51,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setPreference(String p) {
+        this.preference = p;
+    }
+
+    public String getPreference() {
+        return this.preference;
     }
 }

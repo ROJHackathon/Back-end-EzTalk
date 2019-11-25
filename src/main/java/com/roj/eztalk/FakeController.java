@@ -5,6 +5,9 @@ import com.roj.eztalk.exception.*;
 
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.lang.Math;
@@ -13,6 +16,7 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -157,9 +161,15 @@ public class FakeController {
     }
 
     @GetMapping("/material/{id}")
-    public Material fakeGetMaterial(@PathVariable Long id) {
-        return new Material("1", "Some Title", "Some Description", "Some Language", "Some Provider", "Some url",
-                "true/false", 0, FakeController.generateCoverUrl());
+    public Material fakeGetMaterial(@PathVariable String id, HttpServletResponse response) {
+        try {
+            return x5gonService.getMaterialById(id);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return null;
     }
 
     @GetMapping("/chatroom/get-list")

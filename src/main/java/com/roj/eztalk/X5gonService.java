@@ -41,8 +41,24 @@ public class X5gonService implements X5gonInterface {
         return list;
     }
 
+    public Material getMaterialById(String id) throws Exception {
+        String response = this.get(base + "/oer_materials/" + id, new HashMap<>());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode node = objectMapper.readTree(response).get("oer_materials");
+
+        Integer material_id = node.get("material_id").asInt();
+        String title = node.get("title").toString();
+        String description = node.get("description").toString();
+        String language = node.get("language").toString();
+        String provider = node.get("provider").toString();
+        String url = node.get("url").toString();
+        return new Material(material_id.toString(), title, description, language, provider, url, "false", 0, FakeController.generateCoverUrl());
+    }
+
     public String get(String base, Map<String, String> params) throws Exception {
-        URL url = new URL(base + "?" + ParameterStringBuilder.getParameterString(params));
+        String urlStr = params.isEmpty() ? base : base + "?" + ParameterStringBuilder.getParameterString(params);
+        URL url = new URL(urlStr);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
 

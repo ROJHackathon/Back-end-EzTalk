@@ -6,4 +6,5 @@ import com.roj.eztalk.data.*;
 
 public interface X5gonInterface {
     public List<Material> searchMaterial(String text) throws Exception;
+    public Material getMaterialById(String id) throws Exception;
 }

@@ -26,11 +26,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @RequestMapping("/api-fake/")
 public class FakeController {
     private int counter = 0;
-    private List<Chatroom> chatroomList = new ArrayList<>();
-
-    private HashMap<Integer, User> userMap = new HashMap<>();
-    private HashMap<Integer, User> tokenMap = new HashMap<>();
-
     @Autowired
     private AccountInterface account;
     @GetMapping("/user/{id}")
@@ -172,7 +167,7 @@ public class FakeController {
 
     @GetMapping("/chatroom/get-list")
     public List<Chatroom> fakeGetChatroomList() {
-        return this.chatroomList;
+        return new ArrayList<>();
     }
 
     @GetMapping("/chatroom/{id}/get-user")

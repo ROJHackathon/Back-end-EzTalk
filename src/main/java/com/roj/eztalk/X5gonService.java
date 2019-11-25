@@ -78,7 +78,7 @@ public class X5gonService implements X5gonInterface {
         List<Material> ret = new ArrayList<>();
         for (MaterialJson m : mList) {
             Material newMaterial = new Material(m.material_id, m.title, m.description, m.language, m.provider, m.url,
-                    "false", 0, "");
+                    "false", 0, FakeController.generateCoverUrl());
             ret.add(newMaterial);
         }
         return ret;

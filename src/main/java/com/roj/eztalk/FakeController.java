@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -74,22 +75,13 @@ public class FakeController {
     }
 
     @GetMapping("/user/{id}/request-feed")
-    public List<Material> fakeFeed(@PathVariable Long id) {
-        if (id == -1) {
-            throw new UserNotFoundException(id);
+    public List<Material> fakeFeed(@RequestParam(value = "page", defaultValue = "1") String page,
+            @PathVariable Long id) {
+        try {
+            return x5gonService.recommendMaterial("french", page);
+        } catch (Exception e) {
+            return new ArrayList<Material>();
         }
-        ArrayList<Material> ret = new ArrayList<>();
-        ret.add(new Material("1", "Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com",
-                "false", 179, generateCoverUrl()));
-        ret.add(new Material("1", "Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com",
-                "false", 179, generateCoverUrl()));
-        ret.add(new Material("1", "Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com",
-                "false", 179, generateCoverUrl()));
-        ret.add(new Material("1", "Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com",
-                "false", 179, generateCoverUrl()));
-        ret.add(new Material("1", "Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com",
-                "false", 179, generateCoverUrl()));
-        return ret;
     }
 
     @GetMapping("/user/{id}/history")

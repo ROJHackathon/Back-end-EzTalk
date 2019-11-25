@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Material {  
-  private Long id; 
+  private String id; 
   private String 
   title,
   description,
@@ -17,7 +17,7 @@ public class Material {
   
   public Material() {}
   public Material(
-      Long id,
+      String id,
       String title,
       String description,
       String language,

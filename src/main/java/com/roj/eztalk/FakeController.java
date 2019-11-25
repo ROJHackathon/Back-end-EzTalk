@@ -4,6 +4,7 @@ import com.roj.eztalk.data.*;
 import com.roj.eztalk.exception.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.lang.Math;
@@ -28,9 +29,16 @@ public class FakeController {
     private int counter = 0;
     @Autowired
     private AccountInterface account;
+    @Autowired
+    private X5gonService x5gonService;
+
+    @GetMapping("/get")
+    public List<Material> get() throws Exception {
+        return x5gonService.searchMaterial("french");
+    }
 
     @GetMapping("/get-online-user")
-    public List<User> getOnlineUser(){
+    public List<User> getOnlineUser() {
         return account.getOnlineUser();
     }
 
@@ -71,16 +79,16 @@ public class FakeController {
             throw new UserNotFoundException(id);
         }
         ArrayList<Material> ret = new ArrayList<>();
-        ret.add(new Material(Long.valueOf(1), "Material" + counter++, "an intro to French", "French", "ROJFake",
-                "www.fake.com", "false", 179, generateCoverUrl()));
-        ret.add(new Material(Long.valueOf(1), "Material" + counter++, "an intro to French", "French", "ROJFake",
-                "www.fake.com", "false", 179, generateCoverUrl()));
-        ret.add(new Material(Long.valueOf(1), "Material" + counter++, "an intro to French", "French", "ROJFake",
-                "www.fake.com", "false", 179, generateCoverUrl()));
-        ret.add(new Material(Long.valueOf(1), "Material" + counter++, "an intro to French", "French", "ROJFake",
-                "www.fake.com", "false", 179, generateCoverUrl()));
-        ret.add(new Material(Long.valueOf(1), "Material" + counter++, "an intro to French", "French", "ROJFake",
-                "www.fake.com", "false", 179, generateCoverUrl()));
+        ret.add(new Material("1", "Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com",
+                "false", 179, generateCoverUrl()));
+        ret.add(new Material("1", "Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com",
+                "false", 179, generateCoverUrl()));
+        ret.add(new Material("1", "Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com",
+                "false", 179, generateCoverUrl()));
+        ret.add(new Material("1", "Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com",
+                "false", 179, generateCoverUrl()));
+        ret.add(new Material("1", "Material" + counter++, "an intro to French", "French", "ROJFake", "www.fake.com",
+                "false", 179, generateCoverUrl()));
         return ret;
     }
 
@@ -113,20 +121,11 @@ public class FakeController {
 
     @PostMapping("/search-material")
     public List<Material> fakeSearch(@RequestBody SearchEntry searchEntry) {
-        ArrayList<Material> ret = new ArrayList<>();
-        ret.add(new Material(Long.valueOf(1), searchEntry.getText() + " 1", "description 1", "French", "ROJFake",
-                "www.fake.com", "false", 11, generateCoverUrl()));
-        ret.add(new Material(Long.valueOf(1), searchEntry.getText() + " 2", "description 2", "French", "ROJFake",
-                "www.fake.com", "false", 22, generateCoverUrl()));
-        ret.add(new Material(Long.valueOf(1), searchEntry.getText() + " 3", "description 3", "French", "ROJFake",
-                "www.fake.com", "false", 33, generateCoverUrl()));
-        ret.add(new Material(Long.valueOf(1), searchEntry.getText() + " 4", "description 4", "French", "ROJFake",
-                "www.fake.com", "false", 44, generateCoverUrl()));
-        ret.add(new Material(Long.valueOf(1), searchEntry.getText() + " 5", "description 5", "French", "ROJFake",
-                "www.fake.com", "false", 55, generateCoverUrl()));
-        ret.add(new Material(Long.valueOf(1), searchEntry.getText() + " 6", "description 6", "French", "ROJFake",
-                "www.fake.com", "false", 66, generateCoverUrl()));
-        return ret;
+        try {
+            return x5gonService.searchMaterial(searchEntry.getText());
+        } catch (Exception e) {
+            return new ArrayList<Material>();
+        }
     }
 
     // TODO: use id instead of name
@@ -167,8 +166,8 @@ public class FakeController {
 
     @GetMapping("/material/{id}")
     public Material fakeGetMaterial(@PathVariable Long id) {
-        return new Material(Long.valueOf(1), "Some Title", "Some Description", "Some Language", "Some Provider",
-                "Some url", "true/false", 0, FakeController.generateCoverUrl());
+        return new Material("1", "Some Title", "Some Description", "Some Language", "Some Provider", "Some url",
+                "true/false", 0, FakeController.generateCoverUrl());
     }
 
     @GetMapping("/chatroom/get-list")

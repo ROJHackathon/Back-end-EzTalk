@@ -1,15 +1,10 @@
 package com.roj.eztalk.data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 import lombok.Data;
 
 @Data
-@Entity
 public class Material {  
-  private @Id @GeneratedValue Long id; 
+  private Long id; 
   private String 
   title,
   description,

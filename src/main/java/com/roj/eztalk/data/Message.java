@@ -1,15 +1,16 @@
 package com.roj.eztalk.data;
 
+
 import lombok.Data;
 
 @Data
-public class Comment {
+public class Message {
     private Long id;
     private String content;
     private User user;
     
-    public Comment() {}
-    public Comment(String content, User user) {
+    public Message() {}
+    public Message(String content, User user) {
         this.user = user;
         this.content = content;
     }

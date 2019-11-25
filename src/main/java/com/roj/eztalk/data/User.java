@@ -1,22 +1,30 @@
 package com.roj.eztalk.data;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 import lombok.Data;
 
 @Data
 public class User {
-    private @Id @GeneratedValue Long id;
+    //TODO: avatar url
+    private int id;
     private String name;
+    private String password;
+    private String avatarUrl;
     public User() {}
-    public User(String name) {
+    public User(int uid, String name, String avatarUrl) {
+        this.id = uid;
         this.name = name;
+        this.avatarUrl = avatarUrl;
     }
-    public Long getId(){
+    public int getId(){
         return this.id;
     }
     public String getName(){
         return this.name;
+    }
+    public String getPassword(){
+        return this.password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

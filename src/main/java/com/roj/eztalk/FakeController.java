@@ -1,11 +1,17 @@
-package com.roj.eztalk.fake;
+package com.roj.eztalk;
 
 import com.roj.eztalk.data.*;
 import com.roj.eztalk.exception.*;
+
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.lang.Math;
+import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,16 +21,47 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-@CrossOrigin(maxAge = 3600)
 @RestController
+@CrossOrigin(maxAge = 3600)
 @RequestMapping("/api-fake/")
 public class FakeController {
     private int counter = 0;
+    private List<Chatroom> chatroomList = new ArrayList<>();
 
-    @GetMapping("/test-material")
-    public Material testMaterial() {
-        return new Material(Long.valueOf(1), "Some Title", "Some Description", "Some Language", "Some Provider",
-                "Some url", "true/false", 0, generateCoverUrl());
+    private HashMap<Integer, User> userMap = new HashMap<>();
+    private HashMap<Integer, User> tokenMap = new HashMap<>();
+
+    @Autowired
+    private AccountInterface account;
+    @GetMapping("/user/{id}")
+    public User getUser(@PathVariable Long id) {
+        User ret = new User();
+        return ret;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequestBody body) {
+        Integer token = account.login(body.getUserName(), body.getPassword());
+        if(token == null){
+            return ResponseEntity.ok("fail");
+        }
+        return ResponseEntity.ok("ok");
+    }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<String> signUp(@RequestBody SignUpRequestBody body) {
+        return ResponseEntity.ok(account.signup(body.getUserName(), body.getPassword()));
+    }
+
+    @PostMapping("/user/{id}/status")
+    public String getStatus(@RequestBody Token token, @PathVariable Long id) {
+        return account.getStatus(token);
+    }
+
+    @PostMapping("/log-out")
+    public ResponseEntity<String> logOut(@RequestBody Token token) {
+        account.logout(token);
+        return ResponseEntity.ok("success");
     }
 
     @GetMapping("/user/{id}/request-feed")
@@ -91,6 +128,7 @@ public class FakeController {
         return ret;
     }
 
+    // TODO: use id instead of name
     @PostMapping("/material/{id}/comment")
     public ResponseEntity<String> fakeComment(@RequestBody Comment comment, @PathVariable Long id) {
         if (id == -1) {
@@ -101,6 +139,7 @@ public class FakeController {
         return ResponseEntity.ok(comment.getUser().getName() + " : " + comment.getContent());
     }
 
+    // TODO: use id instead of name
     @PostMapping("/material/{id}/like")
     public ResponseEntity<String> fakeLike(@RequestBody User user, @PathVariable Long id) {
         return ResponseEntity.ok(user.getName() + " liked " + id.toString());
@@ -112,16 +151,16 @@ public class FakeController {
             throw new MaterialNotFoundException(id);
         }
         List<Comment> ret = new ArrayList<>();
-        ret.add(new Comment("Comment 1", new User("fake user 1")));
-        ret.add(new Comment("Comment 2", new User("fake user 2")));
-        ret.add(new Comment("Comment 3", new User("fake user 3")));
-        ret.add(new Comment("Comment 4", new User("fake user 4")));
-        ret.add(new Comment("Comment 5", new User("fake user 5")));
-        ret.add(new Comment("Comment 6", new User("fake user 6")));
-        ret.add(new Comment("Comment 7", new User("fake user 7")));
-        ret.add(new Comment("Comment 8", new User("fake user 8")));
-        ret.add(new Comment("Comment 9", new User("fake user 9")));
-        ret.add(new Comment("Comment 10", new User("fake user 10")));
+        ret.add(new Comment("Comment 1", new User(1, "fake user 1", "http://placeimg.com/80/80/people/3")));
+        ret.add(new Comment("Comment 2", new User(2, "fake user 2", "http://placeimg.com/80/80/people/3")));
+        ret.add(new Comment("Comment 3", new User(3, "fake user 3", "http://placeimg.com/80/80/people/3")));
+        ret.add(new Comment("Comment 4", new User(4, "fake user 4", "http://placeimg.com/80/80/people/3")));
+        ret.add(new Comment("Comment 5", new User(5, "fake user 5", "http://placeimg.com/80/80/people/3")));
+        ret.add(new Comment("Comment 6", new User(6, "fake user 6", "http://placeimg.com/80/80/people/3")));
+        ret.add(new Comment("Comment 7", new User(7, "fake user 7", "http://placeimg.com/80/80/people/3")));
+        ret.add(new Comment("Comment 8", new User(8, "fake user 8", "http://placeimg.com/80/80/people/3")));
+        ret.add(new Comment("Comment 9", new User(9, "fake user 9", "http://placeimg.com/80/80/people/3")));
+        ret.add(new Comment("Comment 10", new User(10, "fake user 10", "http://placeimg.com/80/80/people/3")));
         return ret;
     }
 
@@ -129,6 +168,29 @@ public class FakeController {
     public Material fakeGetMaterial(@PathVariable Long id) {
         return new Material(Long.valueOf(1), "Some Title", "Some Description", "Some Language", "Some Provider",
                 "Some url", "true/false", 0, FakeController.generateCoverUrl());
+    }
+
+    @GetMapping("/chatroom/get-list")
+    public List<Chatroom> fakeGetChatroomList() {
+        return this.chatroomList;
+    }
+
+    @GetMapping("/chatroom/{id}/get-user")
+    public List<User> fakeChatroomGetUsers(@PathVariable Long id) {
+        List<User> ret = new ArrayList<>();
+        return ret;
+    }
+
+    @GetMapping("/chatroom/{id}/get-messages")
+    public List<Message> getMessages(@PathVariable Long id) {
+        List<Message> ret = new ArrayList<>();
+        return ret;
+    }
+
+    @GetMapping("/chatroom/{id}/get-active-user")
+    public List<User> getActiveUser(@PathVariable Long id) {
+        List<User> ret = new ArrayList<>();
+        return ret;
     }
 
     public static String generateCoverUrl() {

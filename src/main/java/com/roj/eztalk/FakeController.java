@@ -28,6 +28,17 @@ public class FakeController {
     private int counter = 0;
     @Autowired
     private AccountInterface account;
+
+    @GetMapping("/get-online-user")
+    public List<User> getOnlineUser(){
+        return account.getOnlineUser();
+    }
+
+    @GetMapping("/get-all-user")
+    public List<User> getAllUser() {
+        return account.getAllUser();
+    }
+
     @GetMapping("/user/{id}")
     public User getUser(@PathVariable Long id) {
         User ret = new User();
@@ -50,9 +61,8 @@ public class FakeController {
     }
 
     @PostMapping("/log-out")
-    public ResponseEntity<String> logOut(@RequestBody Token token) {
-        account.logout(token);
-        return ResponseEntity.ok("success");
+    public LogOutResponseBody logOut(@RequestBody Token token) {
+        return account.logout(token);
     }
 
     @GetMapping("/user/{id}/request-feed")

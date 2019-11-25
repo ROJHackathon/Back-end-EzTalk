@@ -5,10 +5,10 @@ import com.roj.eztalk.data.*;
 interface AccountInterface {
     public int getToken(String name);
     public String getStatus(Token token);
-    public Integer login(String userName, String password);
+    public LoginResponseBody login(String userName, String password);
     public void logout(Token token);
     public boolean isUserNameRegistered(String name);
     public boolean isValid(String name, String password);
     public boolean isOnline(Token token);
-    public String signup(String userName, String password);
+    public User signup(String userName, String password);
 }

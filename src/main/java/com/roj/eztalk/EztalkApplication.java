@@ -10,8 +10,8 @@ public class EztalkApplication {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext applicationContext = 
 		SpringApplication.run(EztalkApplication.class, args);
-		Account account = (Account) applicationContext.getBean("account");
-		account.signup("ge", "roj");
+		//Account account = (Account) applicationContext.getBean("account");
+		//account.signup("ge", "roj");
 	}
 
 }

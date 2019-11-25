@@ -35,17 +35,13 @@ public class FakeController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestBody body) {
-        Integer token = account.login(body.getUserName(), body.getPassword());
-        if(token == null){
-            return ResponseEntity.ok("fail");
-        }
-        return ResponseEntity.ok("ok");
+    public LoginResponseBody login(@RequestBody LoginRequestBody body) {
+        return account.login(body.getUserName(), body.getPassword());
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<String> signUp(@RequestBody SignUpRequestBody body) {
-        return ResponseEntity.ok(account.signup(body.getUserName(), body.getPassword()));
+    public User signUp(@RequestBody SignUpRequestBody body) {
+        return account.signup(body.getUserName(), body.getPassword());
     }
 
     @PostMapping("/user/{id}/status")

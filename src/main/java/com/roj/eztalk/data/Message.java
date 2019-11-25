@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class Message {
-    private Long id;
     private String content;
     private User user;
     
@@ -19,8 +18,5 @@ public class Message {
     }
     public User getUser(){
         return this.user;
-    }
-    public Long getId(){
-        return this.id;
     }
 }

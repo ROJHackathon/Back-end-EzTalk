@@ -80,7 +80,8 @@ public class FakeController {
 
     @GetMapping("/user/{id}/request-feed")
     public List<Material> fakeFeed(@RequestParam(value = "page", defaultValue = "1") String page,
-            @PathVariable Long id) {
+            @PathVariable Integer id) {
+        System.out.println(id);
         try {
             return x5gonService.recommendMaterial("french", page);
         } catch (Exception e) {
@@ -147,16 +148,16 @@ public class FakeController {
             throw new MaterialNotFoundException(id);
         }
         List<Comment> ret = new ArrayList<>();
-        ret.add(new Comment("Comment 1", new User(1, "fake user 1", "http://placeimg.com/80/80/people/3")));
-        ret.add(new Comment("Comment 2", new User(2, "fake user 2", "http://placeimg.com/80/80/people/3")));
-        ret.add(new Comment("Comment 3", new User(3, "fake user 3", "http://placeimg.com/80/80/people/3")));
-        ret.add(new Comment("Comment 4", new User(4, "fake user 4", "http://placeimg.com/80/80/people/3")));
-        ret.add(new Comment("Comment 5", new User(5, "fake user 5", "http://placeimg.com/80/80/people/3")));
-        ret.add(new Comment("Comment 6", new User(6, "fake user 6", "http://placeimg.com/80/80/people/3")));
-        ret.add(new Comment("Comment 7", new User(7, "fake user 7", "http://placeimg.com/80/80/people/3")));
-        ret.add(new Comment("Comment 8", new User(8, "fake user 8", "http://placeimg.com/80/80/people/3")));
-        ret.add(new Comment("Comment 9", new User(9, "fake user 9", "http://placeimg.com/80/80/people/3")));
-        ret.add(new Comment("Comment 10", new User(10, "fake user 10", "http://placeimg.com/80/80/people/3")));
+        ret.add(new Comment("Comment 1", new User(1, "fake user 1", generateAvatarUrl())));
+        ret.add(new Comment("Comment 2", new User(2, "fake user 2", generateAvatarUrl())));
+        ret.add(new Comment("Comment 3", new User(3, "fake user 3", generateAvatarUrl())));
+        ret.add(new Comment("Comment 4", new User(4, "fake user 4", generateAvatarUrl())));
+        ret.add(new Comment("Comment 5", new User(5, "fake user 5", generateAvatarUrl())));
+        ret.add(new Comment("Comment 6", new User(6, "fake user 6", generateAvatarUrl())));
+        ret.add(new Comment("Comment 7", new User(7, "fake user 7", generateAvatarUrl())));
+        ret.add(new Comment("Comment 8", new User(8, "fake user 8", generateAvatarUrl())));
+        ret.add(new Comment("Comment 9", new User(9, "fake user 9", generateAvatarUrl())));
+        ret.add(new Comment("Comment 10", new User(10, "fake user 10", generateAvatarUrl())));
         return ret;
     }
 
@@ -172,32 +173,80 @@ public class FakeController {
         return null;
     }
 
-    @GetMapping("/chatroom/get-list")
+    @PostMapping("/create-chatroom")
+    public Chatroom fakeCreateChatroom(@RequestBody Chatroom rb){
+        return new Chatroom(1, rb.getName(), rb.getLanguage());
+    }
+
+    @GetMapping("/chatroom-list")
     public List<Chatroom> fakeGetChatroomList() {
-        return new ArrayList<>();
+        List<Chatroom> ret = new ArrayList<>();
+        ret.add(new Chatroom(1,"chatroom 1", "english"));
+        ret.add(new Chatroom(2, "chatroom 2", "french"));
+        ret.add(new Chatroom(3, "chatroom 3", "chinese"));
+        return ret;
+    }
+
+    @GetMapping("/official-chatroom-list")
+    public List<Chatroom> fakeGetOfficialChatroomList() {
+        List<Chatroom> ret = new ArrayList<>();
+        ret.add(new Chatroom(1,"chatroom 1", "english"));
+        ret.add(new Chatroom(2, "chatroom 2", "french"));
+        ret.add(new Chatroom(3, "chatroom 3", "chinese"));
+        return ret;
+    }
+
+    @GetMapping("/chatroom/{id}")
+    public Chatroom getChatroomById(@PathVariable Integer id){
+        return new Chatroom(1, "ChatroomById", "chinese");
     }
 
     @GetMapping("/chatroom/{id}/get-user")
-    public List<User> fakeChatroomGetUsers(@PathVariable Long id) {
+    public List<User> fakeChatroomGetUsers(@PathVariable Integer id) {
         List<User> ret = new ArrayList<>();
+        ret.add(new User(1, "member1", generateAvatarUrl(), null, null, null));
+        ret.add(new User(1, "member2", generateAvatarUrl(), null, null, null));
+        ret.add(new User(1, "member3", generateAvatarUrl(), null, null, null));
+        ret.add(new User(1, "member4", generateAvatarUrl(), null, null, null));
+        ret.add(new User(1, "member5", generateAvatarUrl(), null, null, null));
         return ret;
     }
 
     @GetMapping("/chatroom/{id}/get-messages")
-    public List<Message> getMessages(@PathVariable Long id) {
+    public List<Message> getMessages(@PathVariable Integer id) {
         List<Message> ret = new ArrayList<>();
+        User u = new User(1, "BigMouth", generateAvatarUrl(), null, null, null);
+        ret.add(new Message("blahblahblah", u));
+        ret.add(new Message("jijijijijiji", u));
+        ret.add(new Message("guaguaguagua", u));
         return ret;
     }
 
     @GetMapping("/chatroom/{id}/get-active-user")
-    public List<User> getActiveUser(@PathVariable Long id) {
+    public List<User> getActiveUser(@PathVariable Integer id) {
         List<User> ret = new ArrayList<>();
+        ret.add(new User(1, "member1", generateAvatarUrl(), null, null, null));
+        ret.add(new User(1, "member2", generateAvatarUrl(), null, null, null));
+        ret.add(new User(1, "member3", generateAvatarUrl(), null, null, null));
+        ret.add(new User(1, "member4", generateAvatarUrl(), null, null, null));
+        ret.add(new User(1, "member5", generateAvatarUrl(), null, null, null));
         return ret;
     }
+
+    @PostMapping("/chatroom/{id}/say")
+    public String fakeSay(@PathVariable Integer id, @RequestBody Message message){
+        return "success";
+    }
+
 
     public static String generateCoverUrl() {
         String ret = "https://cdn.framework7.io/placeholder/nature-1000x600-%s.jpg";
         Long index = Math.round(Math.random() * 7 + 1);
         return String.format(ret, index.toString());
+    }
+    public static String generateAvatarUrl() {
+        String ret = "http://placeimg.com/80/80/people/";
+        Long index = Math.round(Math.random() * 99 + 1);
+        return ret + index.toString();
     }
 }

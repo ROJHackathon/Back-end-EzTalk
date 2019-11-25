@@ -4,16 +4,23 @@ import lombok.Data;
 
 @Data
 public class Chatroom {
-    private Long id;
+    private Integer id;
     private String name;
     private String language;
     
     public Chatroom() {}
-    public Chatroom(String name, String language) {
+    public Chatroom(Integer id, String name, String language) {
+        this.id = id;
         this.name = name;
         this.language = language;
     }
-    public Long getId(){
+    public Integer getId(){
         return this.id;
+    }
+    public String getName() { 
+        return this.name;
+    }
+    public String getLanguage() {
+        return this.language;
     }
 }

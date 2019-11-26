@@ -37,11 +37,6 @@ public class FakeController {
     @Autowired
     private X5gonService x5gonService;
 
-    @GetMapping("/get")
-    public List<Material> get() throws Exception {
-        return x5gonService.searchMaterial("french");
-    }
-
     @GetMapping("/get-online-user")
     public List<User> getOnlineUser() {
         return account.getOnlineUser();
@@ -62,24 +57,25 @@ public class FakeController {
     public LoginResponseBody login(@RequestBody LoginRequestBody body) {
         return account.login(body.getUserName(), body.getPassword());
     }
-
+    //TODO: use status code
     @PostMapping("/sign-up")
     public User signUp(@RequestBody SignUpRequestBody body) {
         return account.signup(body.getUserName(), body.getPassword());
     }
 
     @PostMapping("/user/{id}/status")
-    public String getStatus(@RequestBody Token token, @PathVariable Long id) {
+    public String getStatus(@RequestBody Token token, @PathVariable Integer id) {
         return account.getStatus(token);
     }
-
+    //TODO: use status code
     @PostMapping("/log-out")
     public LogOutResponseBody logOut(@RequestBody Token token) {
         return account.logout(token);
     }
 
     @GetMapping("/request-feed")
-    public List<Material> fakeFeed(@RequestParam Map<String, String> allParams) {
+    public List<Material> requestFeed(@RequestParam Map<String, String> allParams,
+        HttpServletResponse response) {
         String page = allParams.get("page");
         String token = allParams.get("token");
         
@@ -87,6 +83,7 @@ public class FakeController {
             String preference = account.getUserByToken(Integer.parseInt(token)).getPreference();
             return x5gonService.recommendMaterial(preference, page);
         } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return new ArrayList<Material>();
         }
     }
@@ -103,12 +100,13 @@ public class FakeController {
         }
         catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return "Invalid Token";
         }
-        return "success";
+        return "Preference set";
     }
 
     @GetMapping("/history")
-    public List<String> fakeHistory(@RequestParam Map<String, String> allParams) {
+    public List<String> history(@RequestParam Map<String, String> allParams) {
         ArrayList<String> ret = new ArrayList<>();
         ret.add("French Tutorial");
         ret.add("French Restaurant");
@@ -120,7 +118,7 @@ public class FakeController {
     }
 
     @GetMapping("/top-word")
-    public List<String> fakeTopWord() {
+    public List<String> topWord() {
         ArrayList<String> ret = new ArrayList<>();
         ret.add("topword1");
         ret.add("topword2");
@@ -132,7 +130,7 @@ public class FakeController {
     }
 
     @PostMapping("/search-material")
-    public List<Material> fakeSearch(@RequestBody SearchEntry searchEntry) {
+    public List<Material> search(@RequestBody SearchEntry searchEntry) {
         try {
             return x5gonService.searchMaterial(searchEntry.getText());
         } catch (Exception e) {
@@ -142,7 +140,7 @@ public class FakeController {
 
     // TODO: use id instead of name
     @PostMapping("/material/{id}/comment")
-    public ResponseEntity<String> fakeComment(@RequestBody Comment comment, @PathVariable Long id) {
+    public ResponseEntity<String> comment(@RequestBody Comment comment, @PathVariable Long id) {
         if (id == -1) {
             throw new MaterialNotFoundException(id);
         } else if (comment.getId() == -1) {
@@ -153,12 +151,12 @@ public class FakeController {
 
     // TODO: use id instead of name
     @PostMapping("/material/{id}/like")
-    public ResponseEntity<String> fakeLike(@RequestBody User user, @PathVariable Long id) {
+    public ResponseEntity<String> like(@RequestBody User user, @PathVariable Long id) {
         return ResponseEntity.ok(user.getName() + " liked " + id.toString());
     }
 
     @GetMapping("/material/{id}/get-comment")
-    public List<Comment> fakeGetComment(@PathVariable Long id) {
+    public List<Comment> getComment(@PathVariable Long id) {
         if (id == -1) {
             throw new MaterialNotFoundException(id);
         }
@@ -177,7 +175,7 @@ public class FakeController {
     }
 
     @GetMapping("/material/{id}")
-    public Material fakeGetMaterial(@PathVariable String id, HttpServletResponse response) {
+    public Material getMaterial(@PathVariable String id, HttpServletResponse response) {
         try {
             return x5gonService.getMaterialById(id);
         } catch (Exception e) {
@@ -188,12 +186,12 @@ public class FakeController {
     }
 
     @PostMapping("/create-chatroom")
-    public Chatroom fakeCreateChatroom(@RequestBody Chatroom rb) {
+    public Chatroom createChatroom(@RequestBody Chatroom rb) {
         return new Chatroom(1, rb.getName(), rb.getLanguage());
     }
 
     @GetMapping("/chatroom-list")
-    public List<Chatroom> fakeGetChatroomList() {
+    public List<Chatroom> getChatroomList() {
         List<Chatroom> ret = new ArrayList<>();
         ret.add(new Chatroom(1, "chatroom 1", "english"));
         ret.add(new Chatroom(2, "chatroom 2", "french"));
@@ -202,7 +200,7 @@ public class FakeController {
     }
 
     @GetMapping("/official-chatroom-list")
-    public List<Chatroom> fakeGetOfficialChatroomList() {
+    public List<Chatroom> getOfficialChatroomList() {
         List<Chatroom> ret = new ArrayList<>();
         ret.add(new Chatroom(1, "chatroom 1", "english"));
         ret.add(new Chatroom(2, "chatroom 2", "french"));
@@ -216,7 +214,7 @@ public class FakeController {
     }
 
     @GetMapping("/chatroom/{id}/get-user")
-    public List<User> fakeChatroomGetUsers(@PathVariable Integer id) {
+    public List<User> chatroomGetUsers(@PathVariable Integer id) {
         List<User> ret = new ArrayList<>();
         ret.add(new User(1, "member1", generateAvatarUrl(), null, null, null));
         ret.add(new User(1, "member2", generateAvatarUrl(), null, null, null));
@@ -248,7 +246,7 @@ public class FakeController {
     }
 
     @PostMapping("/chatroom/{id}/say")
-    public String fakeSay(@PathVariable Integer id, @RequestBody Message message) {
+    public String say(@PathVariable Integer id, @RequestBody Message message) {
         return "success";
     }
 

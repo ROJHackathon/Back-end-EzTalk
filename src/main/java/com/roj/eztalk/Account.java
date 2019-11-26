@@ -56,7 +56,7 @@ public class Account implements AccountInterface {
         Integer uid = nameToId(userName);
         if(uidTokenMap.containsKey(uid)){
             int prevToken = uidTokenMap.get(uid);
-            tokenMap.remove(token);
+            tokenMap.remove(prevToken);
             uidTokenMap.remove(uid);
         }
         User user = userMap.get(uid);

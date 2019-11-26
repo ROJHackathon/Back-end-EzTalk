@@ -47,10 +47,10 @@ public class Account implements AccountInterface {
     @Override
     public LoginResponseBody login(String userName, String password) {
         if (!isUserNameRegistered(userName)) {
-            return new LoginResponseBody("User Name Does Not Exist", null);
+            return new LoginResponseBody("User Name Does Not Exist", null, "");
         }
         if (!isValid(userName, password)) {
-            return new LoginResponseBody("Invalid Password", null);
+            return new LoginResponseBody("Invalid Password", null, "");
         }
         int token = getToken(userName);
         Integer uid = nameToId(userName);
@@ -62,7 +62,7 @@ public class Account implements AccountInterface {
         User user = userMap.get(uid);
         tokenMap.put(token, user);
         uidTokenMap.put(uid, token);
-        return new LoginResponseBody("Login success", token);
+        return new LoginResponseBody("Login success", token, userName);
     }
 
     @Override

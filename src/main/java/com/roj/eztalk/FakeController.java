@@ -37,6 +37,16 @@ public class FakeController {
     @Autowired
     private X5gonService x5gonService;
 
+    @GetMapping("/get-user")
+    public User getUser(@RequestParam(value="token") Integer token,
+        HttpServletResponse response) {
+        User user = account.getUserByToken(token);
+        if(user == null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return new User();
+        }
+        return user;
+    }
     @GetMapping("/get-online-user")
     public List<User> getOnlineUser() {
         return account.getOnlineUser();

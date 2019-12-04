@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,11 +32,18 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/api-fake/")
 public class FakeController {
-    private int counter = 0;
     @Autowired
     private Account account;
     @Autowired
     private X5gonService x5gonService;
+    @Autowired
+    JdbcTemplate jdbc;
+
+    @GetMapping("/test/get")
+    public Integer getSth() {
+        Integer result = jdbc.queryForObject("SELECT COUNT(*) FROM user", Integer.class);
+        return result;
+    }
 
     @GetMapping("/get-user")
     public User getUser(@RequestParam(value="token") Integer token,

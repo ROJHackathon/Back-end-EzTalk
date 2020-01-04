@@ -17,10 +17,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roj.eztalk.data.Material;
 import com.roj.eztalk.data.json.MaterialJson;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class X5gonService implements X5gonInterface {
+
+    @Autowired
+    private UtilService utilService;
+
     private String base = "https://platform.x5gon.org/api/v1";
 
     @Override
@@ -53,7 +58,7 @@ public class X5gonService implements X5gonInterface {
         String language = node.get("language").toString();
         String provider = node.get("provider").toString();
         String url = node.get("url").toString();
-        return new Material(material_id.toString(), title, description, language, provider, url, "false", 0, FakeController.generateCoverUrl());
+        return new Material(material_id.toString(), title, description, language, provider, url, "false", 0, utilService.generateCoverUrl());
     }
 
     public String get(String base, Map<String, String> params) throws Exception {
@@ -94,7 +99,7 @@ public class X5gonService implements X5gonInterface {
         List<Material> ret = new ArrayList<>();
         for (MaterialJson m : mList) {
             Material newMaterial = new Material(m.material_id, m.title, m.description, m.language, m.provider, m.url,
-                    "false", 0, FakeController.generateCoverUrl());
+                    "false", 0, utilService.generateCoverUrl());
             ret.add(newMaterial);
         }
         return ret;

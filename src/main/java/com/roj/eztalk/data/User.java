@@ -1,63 +1,26 @@
 package com.roj.eztalk.data;
 
-import lombok.Data;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
+@Entity
 @Data
+@AllArgsConstructor
+@RequiredArgsConstructor
+@NoArgsConstructor
 public class User {
-    // TODO: avatar url
-    private Integer id;
-    private String name, password;
+    @Id @GeneratedValue private long id;
+    @NonNull private String name;
+    @NonNull private String password;
     private String avatarUrl = null;
     private String email = null;
     private String language = null;
     private String preference = null;
-
-    public User() {
-    }
-
-    public User(Integer uid, String name, String password) {
-        this.id = uid;
-        this.name = name;
-        this.password = password;
-    }
-
-    public User(Integer uid, String name, String password, String avatarUrl) {
-        this.id = uid;
-        this.name = name;
-        this.password = password;
-        this.avatarUrl = avatarUrl;
-    }
-
-    public User(Integer uid, String name, String avatarUrl, String email, String language, String preference) {
-        this.id = uid;
-        this.name = name;
-        this.avatarUrl = avatarUrl;
-        this.email = email;
-        this.language = language;
-        this.preference = preference;
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setPreference(String p) {
-        this.preference = p;
-    }
-
-    public String getPreference() {
-        return this.preference;
-    }
 }

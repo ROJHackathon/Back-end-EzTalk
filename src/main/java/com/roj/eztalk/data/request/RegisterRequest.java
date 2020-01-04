@@ -1,4 +1,4 @@
-package com.roj.eztalk.data;
+package com.roj.eztalk.data.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Token {
-    private Integer token;
+public class RegisterRequest {
+    private String name;
+    private String password;
 }

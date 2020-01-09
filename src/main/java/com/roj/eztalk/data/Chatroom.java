@@ -1,0 +1,43 @@
+package com.roj.eztalk.data;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
+@Entity
+public class Chatroom {
+    @Id
+    @GeneratedValue
+    private Long id;
+    @NonNull
+    private String name;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "memberOf")
+    private List<User> members = new ArrayList<>();
+
+    public void addMember(User user){
+        this.members.add(user);
+    }
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "chatroom")
+    private List<Message> messages = new ArrayList<>();
+}

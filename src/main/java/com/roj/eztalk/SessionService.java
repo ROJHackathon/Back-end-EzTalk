@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @Service
-public class SessionService implements SessionInterface {
+public class SessionService {
     private HashMap<Long, Integer> idTokenMap = new HashMap<>();
     private HashMap<Integer, Long> tokenIdMap = new HashMap<>();
 
@@ -23,29 +23,22 @@ public class SessionService implements SessionInterface {
     @Autowired
     UserRepository userRepository;
 
-    @Override
+    /**
+     * 
+     * @param name the user name
+     * @return a token for a session
+     */
     public int getToken(String name) {
         String dateTime = LocalDateTime.now().toString();
         String userName = name;
         Integer token = String.format("%s:%s", userName, dateTime).hashCode();
-        int count = 0;
         while (tokenIdMap.containsKey(token)) {
             // dangerous code !!!
-            count++;
             token++;
-            if(count == 5){
-                return 0;
-            }
         }
         return token;
     }
 
-    @Override
-    public String getStatus(Integer token) {
-        return tokenIdMap.containsKey(token) ? "online" : "offline";
-    }
-
-    @Override
     public LoginResponse login(String userName, String password) {
         Optional<User> user = userRepository.findByName(userName);
         if (!user.isPresent()) {
@@ -56,10 +49,11 @@ public class SessionService implements SessionInterface {
             return new LoginResponse("Invalid Password", null, "");
         }
         int token = getToken(userName);
-        if (token == 0) return new LoginResponse("Retry later", null, "");
+        if (token == 0)
+            return new LoginResponse("Retry later", null, "");
 
         Long uid = user.get().getId();
-        if(idTokenMap.containsKey(uid)){
+        if (idTokenMap.containsKey(uid)) {
             Integer oldToken = idTokenMap.get(uid);
             return new LoginResponse("Already logged in", oldToken, userName);
         }
@@ -68,7 +62,6 @@ public class SessionService implements SessionInterface {
         return new LoginResponse("Login success", token, userName);
     }
 
-    @Override
     public LogoutResponse logout(Integer token) {
         if (!tokenIdMap.containsKey(token)) {
             return new LogoutResponse("not online");
@@ -79,23 +72,30 @@ public class SessionService implements SessionInterface {
         return new LogoutResponse("logged out");
     }
 
-    @Override
     public boolean isTokenValid(Integer token) {
         return tokenIdMap.containsKey(token);
     }
 
-    @Override
     public boolean isOnline(Integer token) {
         return tokenIdMap.containsKey(token);
     }
 
-    @Override
-    public List<User> getOnlineUsers(){
+    public List<User> getOnlineUsers() {
         List<User> retval = new ArrayList<>();
-        for (Long uid : idTokenMap.keySet()){
+        for (Long uid : idTokenMap.keySet()) {
             Optional<User> user = userRepository.findById(uid);
-            if (user.isPresent()) retval.add(user.get());
+            if (user.isPresent())
+                retval.add(user.get());
         }
         return retval;
+    }
+
+    public Optional<User> getUserByToken(Integer token) {
+        Long id = this.tokenIdMap.get(token);
+        return userRepository.findById(id);
+    }
+
+    public Long getIdByToken(Integer token) {
+        return this.tokenIdMap.get(token);
     }
 }

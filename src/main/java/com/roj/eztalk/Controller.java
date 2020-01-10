@@ -126,7 +126,7 @@ public class Controller {
 
     // get chatroom list
     @GetMapping("chatroom-list")
-    public List<Chatroom> getChatroomList(){
+    public List<Chatroom> getChatroomList() {
         return chatroomService.getChatroomList();
     }
 
@@ -355,5 +355,30 @@ public class Controller {
             return null;
         }
         return user;
+    }
+
+    @PostMapping("/feed")
+    public List<MaterialAdd> feed(@RequestBody FeedRequest request, HttpServletResponse response) {
+        Optional<User> opUser = sessionService.getUserByToken(request.getToken());
+        if (!opUser.isPresent()) {
+            response.setStatus(400);
+            return null;
+        }
+        User user = opUser.get();
+        String preference = user.getPreference();
+        if(preference == null) {
+            response.setStatus(400);
+            return null;
+        }
+        Integer page = request.getPage();
+        List<MaterialAdd> retval;
+        try {
+             retval = x5gonService.recommendMaterial(preference, page);
+        } catch (Exception e) {
+            response.setStatus(400);
+            return null;
+        }
+        response.setStatus(200);
+        return retval;
     }
 }

@@ -41,10 +41,10 @@ public class X5gonService {
         return toMaterialList(result);
     }
 
-    public List<MaterialAdd> recommendMaterial(String text, String page) throws Exception {
+    public List<MaterialAdd> recommendMaterial(String text, Integer page) throws Exception {
         Map<String, String> params = new HashMap<>();
         params.put("text", text);
-        params.put("page", page);
+        params.put("page", page.toString());
         String result = Http.get(base + "/recommend/oer_materials", params);
         return toMaterialList(result);
     }

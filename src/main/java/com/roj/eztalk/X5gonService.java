@@ -75,7 +75,7 @@ public class X5gonService {
         MaterialAdd retval = new MaterialAdd();
         retval.setId(material_id);
         retval.setTitle(title);
-        retval.setTitle(description);
+        retval.setDescription(description);
         retval.setLanguage(language);;
         retval.setProvider(provider);
         retval.setUrl(url);

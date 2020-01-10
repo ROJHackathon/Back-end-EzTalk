@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @NoArgsConstructor
-public class Message {
+public class Message implements Comparable<Message> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,4 +37,9 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "chatroom_id", referencedColumnName = "id")
     private Chatroom chatroom;
+
+    @Override
+    public int compareTo(Message other) {
+        return this.id.compareTo(other.getId());
+    }
 }

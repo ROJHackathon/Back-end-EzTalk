@@ -5,6 +5,7 @@ import com.roj.eztalk.data.request.*;
 import com.roj.eztalk.data.response.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -194,7 +195,9 @@ public class Controller {
         } else {
             Chatroom chatroom = opChatroom.get();
             response.setStatus(200);
-            return chatroom.getMessages();
+            List<Message> messages = chatroom.getMessages();
+            Collections.sort(messages);
+            return messages;
         }
     }
 

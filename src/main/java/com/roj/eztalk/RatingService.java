@@ -1,5 +1,6 @@
 package com.roj.eztalk;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.roj.eztalk.data.Material;
@@ -27,8 +28,19 @@ public class RatingService {
         if(!opMaterial.isPresent()) return null;
         Material material = opMaterial.get();
 
-        Rating rating = new Rating(rate, user, material);
-        ratingRepository.save(rating);
-        return null;
+        Rating rating = null;
+        List<Rating> ratingList = ratingRepository.findByMaterialIdAndUserId(materialId);
+        for(Rating r : ratingList) {
+            if(r.getAuthor().getId() == user.getId()){
+                rating = r;
+                rating.setRating(rate);
+                break;
+            }
+        }
+        if(rating == null){
+            rating = new Rating(rate, user, material);
+        }
+        rating = ratingRepository.save(rating);
+        return rating;
     }
 }

@@ -37,4 +37,28 @@ public class UserService {
     public Optional<User> findById(Long id){
         return userRepository.findById(id);
     }
+
+    public User setPreference(Long id, String preference) {
+        Optional<User> opUser = userRepository.findById(id);
+        if(!opUser.isPresent()) return null;
+        User user = opUser.get();
+        user.setPreference(preference);
+        return userRepository.save(user);
+    }
+
+    public User setEmail(Long id, String email){
+        Optional<User> opUser = userRepository.findById(id);
+        if(!opUser.isPresent()) return null;
+        User user = opUser.get();
+        user.setEmail(email);
+        return userRepository.save(user);
+    }
+
+    public User setLanguage(Long id, String language) {
+        Optional<User> opUser = userRepository.findById(id);
+        if(!opUser.isPresent()) return null;
+        User user = opUser.get();
+        user.setLanguage(language);
+        return userRepository.save(user);
+    }
 }

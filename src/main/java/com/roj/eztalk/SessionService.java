@@ -96,6 +96,9 @@ public class SessionService {
     }
 
     public Long getIdByToken(Integer token) {
+        if(!tokenIdMap.containsKey(token)){
+            return null;
+        }
         return this.tokenIdMap.get(token);
     }
 }

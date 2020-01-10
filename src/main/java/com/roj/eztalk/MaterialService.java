@@ -28,4 +28,15 @@ public class MaterialService {
         comment = commentRepository.save(comment);
         return comment;
     }
+
+    public Material love(Long id){
+        Optional<Material> opMaterial = materialRepository.findById(id);
+        if(!opMaterial.isPresent()){
+            return null;
+        }
+        Material material = opMaterial.get();
+        int loves = material.getLove();
+        material.setLove(loves + 1);
+        return materialRepository.save(material);
+    }
 }

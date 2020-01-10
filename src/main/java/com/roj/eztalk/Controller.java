@@ -36,6 +36,21 @@ public class Controller {
     @Autowired
     MaterialService materialService;
 
+    // get user by token
+    @GetMapping("get-user/{token}")
+    public User getUserByToken(@PathVariable Integer token, HttpServletResponse response) {
+        if(!sessionService.isOnline(token)){
+            response.setStatus(404);
+            return null;
+        }
+        Optional<User> opUser = sessionService.getUserByToken(token);
+        if(!opUser.isPresent()){
+            response.setStatus(404);
+            return null;
+        }
+        return opUser.get();
+    }
+
     // user
     @GetMapping("user/{id}")
     public User getUser(@PathVariable Long id, HttpServletResponse response) {
@@ -75,8 +90,10 @@ public class Controller {
     // login
     @PostMapping("login")
     public LoginResponse login(@RequestBody LoginRequest body, HttpServletResponse response) {
-        LoginResponse responseBody = sessionService.login(body.getName(), body.getPassword());
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        LoginResponse responseBody = sessionService.login(body.getUserName(), body.getPassword());
+        if(responseBody.getToken() == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
         return responseBody;
     }
 
@@ -87,7 +104,7 @@ public class Controller {
     }
 
     // get oneline users
-    @GetMapping("get-oneline-users")
+    @GetMapping("get-online-users")
     public List<User> getOnlineUsers() {
         return sessionService.getOnlineUsers();
     }
@@ -232,7 +249,7 @@ public class Controller {
     }
 
     @GetMapping("/material/{id}/get-comments")
-    public List<Comment> testId(@PathVariable Long id, HttpServletResponse response) {
+    public List<Comment> getComments(@PathVariable Long id, HttpServletResponse response) {
         Optional<Material> opMaterial = materialService.findById(id);
         if(!opMaterial.isPresent()){
             response.setStatus(404);
@@ -243,4 +260,64 @@ public class Controller {
         return material.getComments();
     }
 
+    @PostMapping("/material/{id}/love")
+    public void love(@RequestBody Token token, @PathVariable Long id, HttpServletResponse response) {
+        Material material = materialService.love(id);
+        if(material == null) {
+            response.setStatus(404);
+        } else {
+            response.setStatus(200);
+        }
+    }
+
+    @PostMapping("/set-email")
+    public User setEmail(@RequestBody SetEmailRequest request, HttpServletResponse response) {
+        Integer token = request.getToken();
+        String email = request.getEmail();
+        Long id = sessionService.getIdByToken(token);
+        if(id == null) {
+            response.setStatus(400);
+            return null;
+        }
+        User user = userService.setEmail(id, email);
+        if(user == null) {
+            response.setStatus(400);
+            return null;
+        }
+        return user;
+    }
+
+    @PostMapping("/set-preference")
+    public User setPreference(@RequestBody SetPreferenceRequest request, HttpServletResponse response) {
+        Integer token = request.getToken();
+        String preference = request.getPreference();
+        Long id = sessionService.getIdByToken(token);
+        if(id == null) {
+            response.setStatus(400);
+            return null;
+        }
+        User user = userService.setPreference(id, preference);
+        if(user == null) {
+            response.setStatus(400);
+            return null;
+        }
+        return user;
+    }
+
+    @PostMapping("/set-language")
+    public User setLanguage(@RequestBody SetLanguageRequest request, HttpServletResponse response) {
+        Integer token = request.getToken();
+        String language = request.getLanguage();
+        Long id = sessionService.getIdByToken(token);
+        if(id == null) {
+            response.setStatus(400);
+            return null;
+        }
+        User user = userService.setLanguage(id, language);
+        if(user == null) {
+            response.setStatus(400);
+            return null;
+        }
+        return user;
+    }
 }

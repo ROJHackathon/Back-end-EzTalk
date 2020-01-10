@@ -61,4 +61,12 @@ public class UserService {
         user.setLanguage(language);
         return userRepository.save(user);
     }
+
+    public User setTargetLanguage(Long id, String language) {
+        Optional<User> opUser = userRepository.findById(id);
+        if(!opUser.isPresent()) return null;
+        User user = opUser.get();
+        user.setTargetLanguage(language);
+        return userRepository.save(user);
+    }
 }

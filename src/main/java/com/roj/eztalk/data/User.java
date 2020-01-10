@@ -36,6 +36,7 @@ public class User {
     private String avatarUrl = null;
     private String email = null;
     private String language = null;
+    private String targetLanguage = null;
     private String preference = null;
 
     @JsonIgnore

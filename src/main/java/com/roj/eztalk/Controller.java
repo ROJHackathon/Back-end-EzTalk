@@ -339,4 +339,21 @@ public class Controller {
         }
         return user;
     }
+
+    @PostMapping("/set-target-language")
+    public User setTargetLanguage(@RequestBody SetTargetLanguageRequest request, HttpServletResponse response) {
+        Integer token = request.getToken();
+        String language = request.getTargetLanguage();
+        Long id = sessionService.getIdByToken(token);
+        if (id == null) {
+            response.setStatus(400);
+            return null;
+        }
+        User user = userService.setTargetLanguage(id, language);
+        if (user == null) {
+            response.setStatus(400);
+            return null;
+        }
+        return user;
+    }
 }

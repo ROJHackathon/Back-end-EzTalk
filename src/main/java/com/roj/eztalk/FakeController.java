@@ -212,9 +212,9 @@ public class FakeController {
     @GetMapping("/official-chatroom-list")
     public List<Chatroom> getOfficialChatroomList() {
         List<Chatroom> ret = new ArrayList<>();
-        ret.add(new Chatroom(1, "chatroom 1", "english"));
-        ret.add(new Chatroom(2, "chatroom 2", "french"));
-        ret.add(new Chatroom(3, "chatroom 3", "chinese"));
+        ret.add(new Chatroom(1, "official chatroom 1", "english"));
+        ret.add(new Chatroom(2, "official chatroom 2", "french"));
+        ret.add(new Chatroom(3, "official chatroom 3", "chinese"));
         return ret;
     }
 

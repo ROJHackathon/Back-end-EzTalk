@@ -1,39 +1,48 @@
 package com.roj.eztalk.data;
 
-import lombok.Data;
+import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
 @Data
-public class Material {  
-  private String id; 
-  private String 
-  title,
-  description,
-  language,
-  provider,
-  url,
-  isFlashCard,
-  coverUrl;
-  private Integer like;
-  
-  public Material() {}
-  public Material(
-      String id,
-      String title,
-      String description,
-      String language,
-      String provider,
-      String url,
-      String isFlashCard,
-      Integer like,
-      String coverUrl) {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Material {
+  // @Id
+  // @GeneratedValue
+  // private Long id;
+  // private String title;
+  // private String description;
+  // private String language;
+  // private String provider;
+  // private String url;
+  // private String isFlashCard;
+  // private String coverUrl;
+  // private Integer like;
+  public Material(Long id, String coverUrl, int love) {
     this.id = id;
-    this.title = title;
-    this.description = description;
-    this.provider = provider;
-    this.language = language;
-    this.url = url;
-    this.isFlashCard = isFlashCard;
-    this.like = like;
     this.coverUrl = coverUrl;
+    this.love = love;
   }
+
+  @Id
+  private Long id;
+  private String coverUrl;
+  private int love;
+
+
+  @OneToMany(mappedBy = "material")
+  private List<Comment> comments;
+
+  @OneToMany(mappedBy = "material")
+  private List<Rating> ratings;
 }

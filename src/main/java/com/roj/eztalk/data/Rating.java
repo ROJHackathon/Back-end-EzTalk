@@ -1,7 +1,5 @@
 package com.roj.eztalk.data;
 
-import javax.annotation.Generated;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,32 +7,32 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
-@RequiredArgsConstructor
 @NoArgsConstructor
-public class Message {
+public class Rating {
+    public Rating(Integer rating, User author, Material material){
+        this.rating = rating;
+        this.author = author;
+        this.material = material;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Integer rating;
 
-    @NonNull
-    private String content;
-
-    @NonNull
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user", referencedColumnName = "id")
     private User author;
 
-    @NonNull
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "chatroom_id", referencedColumnName = "id")
-    private Chatroom chatroom;
+    @JoinColumn(name = "material", referencedColumnName = "id")
+    private Material material;
 }

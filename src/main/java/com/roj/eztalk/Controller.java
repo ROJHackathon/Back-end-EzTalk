@@ -80,7 +80,7 @@ public class Controller {
     // sign-up
     @PostMapping("register")
     public User register(@RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
-        User user = userService.register(registerRequest.getName(), registerRequest.getPassword());
+        User user = userService.register(registerRequest.getUserName(), registerRequest.getPassword());
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {

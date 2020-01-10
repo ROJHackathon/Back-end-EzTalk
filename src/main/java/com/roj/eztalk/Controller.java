@@ -41,12 +41,12 @@ public class Controller {
     // get user by token
     @GetMapping("get-user/{token}")
     public User getUserByToken(@PathVariable Integer token, HttpServletResponse response) {
-        if(!sessionService.isOnline(token)){
+        if (!sessionService.isOnline(token)) {
             response.setStatus(404);
             return null;
         }
         Optional<User> opUser = sessionService.getUserByToken(token);
-        if(!opUser.isPresent()){
+        if (!opUser.isPresent()) {
             response.setStatus(404);
             return null;
         }
@@ -93,7 +93,7 @@ public class Controller {
     @PostMapping("login")
     public LoginResponse login(@RequestBody LoginRequest body, HttpServletResponse response) {
         LoginResponse responseBody = sessionService.login(body.getUserName(), body.getPassword());
-        if(responseBody.getToken() == null) {
+        if (responseBody.getToken() == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         return responseBody;
@@ -114,7 +114,8 @@ public class Controller {
     // create chatroom
     @PostMapping("create-chatroom")
     public Chatroom createChatroom(@RequestBody CreateChatroomRequest request, HttpServletResponse response) {
-        Chatroom chatroom = chatroomService.createChatroom(request.getName());
+        Chatroom chatroom = chatroomService.createChatroom(request.getName(), request.getType(), request.getLanguage(),
+                request.getDescription());
         if (chatroom == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
@@ -234,8 +235,9 @@ public class Controller {
     public Rating rate(@RequestBody RateRequest request, @PathVariable Long id, HttpServletResponse response) {
         Integer token = request.getToken();
         Integer rate = request.getRate();
-        Rating rating =  ratingService.rate(token, id, rate);
-        if(rating == null) response.setStatus(400);
+        Rating rating = ratingService.rate(token, id, rate);
+        if (rating == null)
+            response.setStatus(400);
         return rating;
     }
 
@@ -245,13 +247,13 @@ public class Controller {
         Integer token = request.getToken();
 
         Optional<Material> opMaterial = materialService.findById(id);
-        if(!opMaterial.isPresent()){
+        if (!opMaterial.isPresent()) {
             response.setStatus(404);
             return null;
         }
 
         Optional<User> opUser = sessionService.getUserByToken(token);
-        if(!opUser.isPresent()){
+        if (!opUser.isPresent()) {
             response.setStatus(400);
             return null;
         }
@@ -262,7 +264,7 @@ public class Controller {
     @GetMapping("/material/{id}/get-comments")
     public List<Comment> getComments(@PathVariable Long id, HttpServletResponse response) {
         Optional<Material> opMaterial = materialService.findById(id);
-        if(!opMaterial.isPresent()){
+        if (!opMaterial.isPresent()) {
             response.setStatus(404);
             return null;
         }
@@ -274,7 +276,7 @@ public class Controller {
     @PostMapping("/material/{id}/love")
     public void love(@RequestBody Token token, @PathVariable Long id, HttpServletResponse response) {
         Material material = materialService.love(id);
-        if(material == null) {
+        if (material == null) {
             response.setStatus(404);
         } else {
             response.setStatus(200);
@@ -286,12 +288,12 @@ public class Controller {
         Integer token = request.getToken();
         String email = request.getEmail();
         Long id = sessionService.getIdByToken(token);
-        if(id == null) {
+        if (id == null) {
             response.setStatus(400);
             return null;
         }
         User user = userService.setEmail(id, email);
-        if(user == null) {
+        if (user == null) {
             response.setStatus(400);
             return null;
         }
@@ -303,12 +305,12 @@ public class Controller {
         Integer token = request.getToken();
         String preference = request.getPreference();
         Long id = sessionService.getIdByToken(token);
-        if(id == null) {
+        if (id == null) {
             response.setStatus(400);
             return null;
         }
         User user = userService.setPreference(id, preference);
-        if(user == null) {
+        if (user == null) {
             response.setStatus(400);
             return null;
         }
@@ -320,12 +322,12 @@ public class Controller {
         Integer token = request.getToken();
         String language = request.getLanguage();
         Long id = sessionService.getIdByToken(token);
-        if(id == null) {
+        if (id == null) {
             response.setStatus(400);
             return null;
         }
         User user = userService.setLanguage(id, language);
-        if(user == null) {
+        if (user == null) {
             response.setStatus(400);
             return null;
         }

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,6 +30,13 @@ public class Chatroom {
     private Long id;
     @NonNull
     private String name;
+    @NonNull
+    @Column(length = 200)
+    private String description;
+    @NonNull
+    private String language;
+    @NonNull
+    private String type;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "memberOf")

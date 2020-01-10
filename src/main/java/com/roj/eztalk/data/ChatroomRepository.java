@@ -1,5 +1,6 @@
 package com.roj.eztalk.data;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,9 @@ public interface ChatroomRepository extends CrudRepository<Chatroom, Long> {
     // @Query("SELECT m FROM Material m where m.material_id = :id")
     // public Optional<Material> findByMaterialId(@Param("id") Long id);
 
-    // @Query("SELECT u FROM User u WHERE u.name = :name ")
-    // public Optional<User> findByName(@Param("name") String name);
+    @Query("SELECT c FROM Chatroom c WHERE c.name = :name ")
+    public Optional<Chatroom> findByName(@Param("name") String name);
+
+    @Query("SELECT c FROM Chatroom c")
+    public List<Chatroom> findAll();
 }

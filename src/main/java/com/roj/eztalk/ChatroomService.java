@@ -29,16 +29,17 @@ public class ChatroomService {
         return !nameSet.contains(name);
     }
 
-    public Chatroom createChatroom(String name) {
-        if (!isNameAvailable(name))
-            return null;
-        Chatroom chatroom = chatroomRepository.save(new Chatroom(name));
+    public Chatroom createChatroom(String name, String type, String language, String description) {
+        Optional<Chatroom> opChatroom = chatroomRepository.findByName(name);
+        if(opChatroom.isPresent()) return null;
+        Chatroom chatroom = new Chatroom(name, description, language, type);
+        chatroom = chatroomRepository.save(chatroom);
         this.idNameMap.put(chatroom.getId(), name);
         return chatroom;
     }
 
-    public List<String> getChatroomList() {
-        return new ArrayList<>(idNameMap.values());
+    public List<Chatroom> getChatroomList() {
+        return chatroomRepository.findAll();
     }
 
     public Optional<Chatroom> findById(Long id) {

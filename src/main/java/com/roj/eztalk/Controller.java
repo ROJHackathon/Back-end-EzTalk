@@ -367,8 +367,7 @@ public class Controller {
         User user = opUser.get();
         String preference = user.getPreference();
         if(preference == null) {
-            response.setStatus(400);
-            return null;
+            preference = "English";
         }
         Integer page = request.getPage();
         List<MaterialAdd> retval;

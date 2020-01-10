@@ -1,6 +1,5 @@
 package com.roj.eztalk.data;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;

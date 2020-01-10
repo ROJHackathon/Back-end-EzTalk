@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -25,9 +26,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @NoArgsConstructor
 public class User {
-    @Id @GeneratedValue private long id;
-    @NonNull private String name;
-    @NonNull private String password;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @NonNull
+    private String name;
+    @NonNull
+    private String password;
     private String avatarUrl = null;
     private String email = null;
     private String language = null;
@@ -35,16 +40,18 @@ public class User {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(
-        name = "user_chatroom",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "chatroom_id"))
+    @JoinTable(name = "user_chatroom", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "chatroom_id"))
     private List<Chatroom> memberOf = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<Message> messages;
+
     public void addChatroom(Chatroom chatroom) {
         this.memberOf.add(chatroom);
     }
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author")
+    private List<Comment> comments;
 }

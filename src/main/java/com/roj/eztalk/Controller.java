@@ -35,6 +35,8 @@ public class Controller {
     X5gonService x5gonService;
     @Autowired
     MaterialService materialService;
+    @Autowired
+    RatingService ratingService;
 
     // get user by token
     @GetMapping("get-user/{token}")
@@ -226,6 +228,15 @@ public class Controller {
             response.setStatus(400);
             return null;
         }
+    }
+
+    @PostMapping("/material/{id}/rate")
+    public Rating rate(@RequestBody RateRequest request, @PathVariable Long id, HttpServletResponse response) {
+        Integer token = request.getToken();
+        Integer rate = request.getRate();
+        Rating rating =  ratingService.rate(token, id, rate);
+        if(rating == null) response.setStatus(400);
+        return rating;
     }
 
     @PostMapping("/material/{id}/comment")

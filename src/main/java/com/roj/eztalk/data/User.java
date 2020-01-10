@@ -54,4 +54,8 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<Comment> comments;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author")
+    private List<Rating> ratings;
 }

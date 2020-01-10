@@ -42,4 +42,7 @@ public class Material {
 
   @OneToMany(mappedBy = "material")
   private List<Comment> comments;
+
+  @OneToMany(mappedBy = "material")
+  private List<Rating> ratings;
 }

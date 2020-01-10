@@ -231,9 +231,16 @@ public class Controller {
         return materialService.comment(opUser.get(), opMaterial.get(), content);
     }
 
-    @PostMapping("/material/{id}/test")
-    public CommentRequest testId(@RequestBody CommentRequest request, @PathVariable Long id, HttpServletResponse response) {
-        return request;
+    @GetMapping("/material/{id}/get-comments")
+    public List<Comment> testId(@PathVariable Long id, HttpServletResponse response) {
+        Optional<Material> opMaterial = materialService.findById(id);
+        if(!opMaterial.isPresent()){
+            response.setStatus(404);
+            return null;
+        }
+        Material material = opMaterial.get();
+        response.setStatus(200);
+        return material.getComments();
     }
 
 }

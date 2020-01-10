@@ -124,6 +124,12 @@ public class Controller {
         return chatroom;
     }
 
+    // get chatroom list
+    @GetMapping("chatroom-list")
+    public List<Chatroom> getChatroomList(){
+        return chatroomService.getChatroomList();
+    }
+
     // send message
     @PostMapping("chatroom/{id}/say")
     public Message say(@RequestBody SendMessageRequest request, @PathVariable Long id, HttpServletResponse response) {

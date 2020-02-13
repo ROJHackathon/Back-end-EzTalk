@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class ParameterStringBuilder {
     public static String getParameterString(Map<String, String> params) throws UnsupportedEncodingException {
+        // generate a url string with a parameter map
         StringBuilder result = new StringBuilder();
         for(Map.Entry<String, String> entry : params.entrySet()){
             result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));

@@ -14,7 +14,7 @@ public class MaterialAdd {
   private String title;
   private String description;
   private String language;
-  private String provider;
+  // private String provider;
   private String url;
   // additional
   private String coverUrl;
@@ -25,7 +25,7 @@ public class MaterialAdd {
     this.title = json.title;
     this.description = json.description;
     this.language = json.language;
-    this.provider = json.provider;
+    // this.provider = json.provider;
     this.url = json.url;
 
     this.coverUrl = material.getCoverUrl();

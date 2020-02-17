@@ -69,7 +69,6 @@ public class X5gonService {
         String title = node.get("title").toString();
         String description = node.get("description").toString();
         String language = node.get("language").toString();
-        String provider = node.get("provider").toString();
         String url = node.get("url").toString();
         
         MaterialAdd retval = new MaterialAdd();
@@ -77,7 +76,6 @@ public class X5gonService {
         retval.setTitle(title);
         retval.setDescription(description);
         retval.setLanguage(language);;
-        retval.setProvider(provider);
         retval.setUrl(url);
 
         retval.setLove(material.getLove());

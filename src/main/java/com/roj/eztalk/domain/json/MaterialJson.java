@@ -13,6 +13,7 @@ public class MaterialJson {
     public String description;
     // public String provider;
     public String language;
-    public List<WikiJson> wikipedia;
+    // public List<WikiJson> wikipedia;
     public String type;
+    public String mimetype;
 }

@@ -20,6 +20,8 @@ public class MaterialAdd {
   // additional
   private String coverUrl;
   private Integer love;
+  private String type;
+  private String mimetype;
 
   public MaterialAdd(MaterialJson json, Material material){
     this.id = Long.parseLong(json.material_id);
@@ -28,6 +30,8 @@ public class MaterialAdd {
     this.language = json.language;
     // this.provider = json.provider;
     this.url = json.url;
+    this.type = json.type;
+    this.mimetype = json.mimetype;
 
     this.coverUrl = material.getCoverUrl();
     this.love = material.getLove();

@@ -60,23 +60,9 @@ public class X5gonService {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readTree(response).get("oer_materials");
-
-        Long material_id = node.get("material_id").asLong();
-        String title = node.get("title").toString();
-        String description = node.get("description").toString();
-        String language = node.get("language").toString();
-        String url = node.get("url").toString();
-        
-        MaterialAdd retval = new MaterialAdd();
-        retval.setId(material_id);
-        retval.setTitle(title);
-        retval.setDescription(description);
-        retval.setLanguage(language);;
-        retval.setUrl(url);
-
-        retval.setLove(material.getLove());
-        retval.setCoverUrl(material.getCoverUrl());
-        return retval;
+        MaterialJson materialJson = objectMapper.treeToValue(node, MaterialJson.class);
+        MaterialAdd materialAdd = new MaterialAdd(materialJson, material);
+        return materialAdd;
     }
 
     private List<MaterialAdd> toMaterialList(String json) throws Exception {

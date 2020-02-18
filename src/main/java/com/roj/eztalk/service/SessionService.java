@@ -2,6 +2,7 @@ package com.roj.eztalk.service;
 
 import java.time.LocalDateTime;
 import com.roj.eztalk.domain.*;
+import com.roj.eztalk.dao.*;
 import com.roj.eztalk.domain.response.LoginResponse;
 import com.roj.eztalk.domain.response.LogoutResponse;
 

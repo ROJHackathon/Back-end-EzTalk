@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.roj.eztalk.domain.Chatroom;
-import com.roj.eztalk.domain.ChatroomRepository;
+import com.roj.eztalk.dao.ChatroomRepository;
 import com.roj.eztalk.domain.Message;
-import com.roj.eztalk.domain.MessageRepository;
+import com.roj.eztalk.dao.MessageRepository;
 import com.roj.eztalk.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;

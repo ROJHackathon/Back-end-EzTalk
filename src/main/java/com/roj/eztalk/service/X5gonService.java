@@ -13,8 +13,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roj.eztalk.domain.Material;
-import com.roj.eztalk.domain.MaterialAdd;
-import com.roj.eztalk.domain.MaterialRepository;
+import com.roj.eztalk.domain.MaterialItem;
+import com.roj.eztalk.dao.MaterialRepository;
 import com.roj.eztalk.domain.json.MaterialJson;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +30,14 @@ public class X5gonService {
 
     private String base = "https://platform.x5gon.org/api/v1";
 
-    public List<MaterialAdd> searchMaterial(String text) throws Exception {
+    public List<MaterialItem> searchMaterial(String text) throws Exception {
         Map<String, String> params = new HashMap<>();
         params.put("text", text);
         String result = Http.get(base + "/search", params);
         return toMaterialList(result);
     }
 
-    public List<MaterialAdd> recommendMaterial(String text, Integer page) throws Exception {
+    public List<MaterialItem> recommendMaterial(String text, Integer page) throws Exception {
         Map<String, String> params = new HashMap<>();
         params.put("text", text);
         params.put("page", page.toString());
@@ -45,7 +45,7 @@ public class X5gonService {
         return toMaterialList(result);
     }
 
-    public MaterialAdd getMaterialById(Long id) throws Exception {
+    public MaterialItem getMaterialById(Long id) throws Exception {
         // the material already exists in eztalk database
         Material material;
         Optional<Material> opMaterial = materialRepository.findById(id);
@@ -61,27 +61,27 @@ public class X5gonService {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readTree(response).get("oer_materials");
         MaterialJson materialJson = objectMapper.treeToValue(node, MaterialJson.class);
-        MaterialAdd materialAdd = new MaterialAdd(materialJson, material);
+        MaterialItem materialAdd = new MaterialItem(materialJson, material);
         return materialAdd;
     }
 
-    private List<MaterialAdd> toMaterialList(String json) throws Exception {
+    private List<MaterialItem> toMaterialList(String json) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode root = objectMapper.readTree(json);
         JsonNode rec_materials = root.get("rec_materials");
         List<MaterialJson> mList = objectMapper.readValue(rec_materials.toString(),
                 new TypeReference<List<MaterialJson>>() {
                 });
-        List<MaterialAdd> retval = new ArrayList<>();
+        List<MaterialItem> retval = new ArrayList<>();
         for(MaterialJson ma : mList){
             Long id = Long.parseLong(ma.material_id);
             Optional<Material> opMaterial = materialRepository.findById(id);
             if(opMaterial.isPresent()){
-                retval.add(new MaterialAdd(ma, opMaterial.get()));
+                retval.add(new MaterialItem(ma, opMaterial.get()));
             } else {
                 Material material = new Material(id, utilService.generateCoverUrl(), 0);
                 materialRepository.save(material);
-                retval.add(new MaterialAdd(ma, material));
+                retval.add(new MaterialItem(ma, material));
             }
         }
         return retval;

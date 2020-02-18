@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import java.util.Optional;
 
 import com.roj.eztalk.domain.User;
-import com.roj.eztalk.domain.UserRepository;
+import com.roj.eztalk.dao.UserRepository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

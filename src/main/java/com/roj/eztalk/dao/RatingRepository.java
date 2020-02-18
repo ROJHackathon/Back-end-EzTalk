@@ -1,10 +1,12 @@
-package com.roj.eztalk.domain;
+package com.roj.eztalk.dao;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+
+import com.roj.eztalk.domain.Rating;
 
 public interface RatingRepository extends CrudRepository<Rating, Long> {
 

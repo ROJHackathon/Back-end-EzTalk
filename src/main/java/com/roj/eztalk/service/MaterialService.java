@@ -3,9 +3,9 @@ package com.roj.eztalk.service;
 import java.util.Optional;
 
 import com.roj.eztalk.domain.Comment;
-import com.roj.eztalk.domain.CommentRepository;
+import com.roj.eztalk.dao.CommentRepository;
 import com.roj.eztalk.domain.Material;
-import com.roj.eztalk.domain.MaterialRepository;
+import com.roj.eztalk.dao.MaterialRepository;
 import com.roj.eztalk.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;

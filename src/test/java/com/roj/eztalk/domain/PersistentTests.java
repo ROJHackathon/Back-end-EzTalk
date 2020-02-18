@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
-import com.roj.eztalk.domain.*;
+import com.roj.eztalk.dao.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

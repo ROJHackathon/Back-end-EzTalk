@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.roj.eztalk.domain.Material;
 import com.roj.eztalk.domain.Rating;
-import com.roj.eztalk.domain.RatingRepository;
+import com.roj.eztalk.dao.RatingRepository;
 import com.roj.eztalk.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;

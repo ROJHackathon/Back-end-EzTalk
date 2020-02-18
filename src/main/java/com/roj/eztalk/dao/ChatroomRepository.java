@@ -1,4 +1,4 @@
-package com.roj.eztalk.domain;
+package com.roj.eztalk.dao;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+
+import com.roj.eztalk.domain.Chatroom;
 
 public interface ChatroomRepository extends CrudRepository<Chatroom, Long> {
     // @Query("SELECT m FROM Material m where m.material_id = :id")

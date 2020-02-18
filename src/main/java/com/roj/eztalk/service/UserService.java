@@ -3,7 +3,7 @@ package com.roj.eztalk.service;
 import java.util.Optional;
 
 import com.roj.eztalk.domain.User;
-import com.roj.eztalk.domain.UserRepository;
+import com.roj.eztalk.dao.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

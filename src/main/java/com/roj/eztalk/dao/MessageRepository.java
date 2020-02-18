@@ -1,6 +1,8 @@
-package com.roj.eztalk.domain;
+package com.roj.eztalk.dao;
 
 import org.springframework.data.repository.CrudRepository;
+
+import com.roj.eztalk.domain.Message;
 
 public interface MessageRepository extends CrudRepository<Message, Long> {
     // @Query("SELECT m FROM Material m where m.material_id = :id")

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,14 @@ public class Controller {
     MaterialService materialService;
     @Autowired
     RatingService ratingService;
+
+    // testing cookies
+    @GetMapping("hi")
+    public String hi(HttpServletResponse response){
+        Cookie cookie = new Cookie("token", "123");
+        response.addCookie(cookie);
+        return "hi";
+    }
 
     // get user by token
     @GetMapping("get-user/{token}")

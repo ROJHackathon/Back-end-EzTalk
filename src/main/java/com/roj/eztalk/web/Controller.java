@@ -8,6 +8,7 @@ import com.roj.eztalk.domain.response.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -48,7 +49,7 @@ public class Controller {
 
     // get user by token
     @GetMapping("get-user/{token}")
-    public User getUserByToken(@PathVariable Integer token, HttpServletResponse response) {
+    public UserItem getUserByToken(@PathVariable Integer token, HttpServletResponse response) {
         if (!sessionService.isOnline(token)) {
             response.setStatus(404);
             return null;
@@ -58,19 +59,19 @@ public class Controller {
             response.setStatus(404);
             return null;
         }
-        return opUser.get();
+        return new UserItem(opUser.get());
     }
 
     // sign-up
     @PostMapping("register")
-    public User register(@RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
+    public UserItem register(@RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
         User user = userService.register(registerRequest.getUserName(), registerRequest.getPassword());
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
             response.setStatus(200);
         }
-        return user;
+        return new UserItem(user);
     }
 
     // login
@@ -91,8 +92,8 @@ public class Controller {
 
     // get online users
     @GetMapping("get-online-users")
-    public List<User> getOnlineUsers() {
-        return sessionService.getOnlineUsers();
+    public List<UserItem> getOnlineUsers() {
+        return sessionService.getOnlineUsers().stream().map(x->new UserItem(x)).collect(Collectors.toList());
     }
 
     @PostMapping("/search-material")
@@ -124,7 +125,7 @@ public class Controller {
     }
 
     @PostMapping("/set-email")
-    public User setEmail(@RequestBody SetEmailRequest request, HttpServletResponse response) {
+    public UserItem setEmail(@RequestBody SetEmailRequest request, HttpServletResponse response) {
         Integer token = request.getToken();
         String email = request.getEmail();
         Long id = sessionService.getIdByToken(token);
@@ -137,11 +138,11 @@ public class Controller {
             response.setStatus(400);
             return null;
         }
-        return user;
+        return new UserItem(user);
     }
 
     @PostMapping("/set-preference")
-    public User setPreference(@RequestBody SetPreferenceRequest request, HttpServletResponse response) {
+    public UserItem setPreference(@RequestBody SetPreferenceRequest request, HttpServletResponse response) {
         Integer token = request.getToken();
         String preference = request.getPreference();
         Long id = sessionService.getIdByToken(token);
@@ -154,11 +155,11 @@ public class Controller {
             response.setStatus(400);
             return null;
         }
-        return user;
+        return new UserItem(user);
     }
 
     @PostMapping("/set-language")
-    public User setLanguage(@RequestBody SetLanguageRequest request, HttpServletResponse response) {
+    public UserItem setLanguage(@RequestBody SetLanguageRequest request, HttpServletResponse response) {
         Integer token = request.getToken();
         String language = request.getLanguage();
         Long id = sessionService.getIdByToken(token);
@@ -171,11 +172,11 @@ public class Controller {
             response.setStatus(400);
             return null;
         }
-        return user;
+        return new UserItem(user);
     }
 
     @PostMapping("/set-target-language")
-    public User setTargetLanguage(@RequestBody SetTargetLanguageRequest request, HttpServletResponse response) {
+    public UserItem setTargetLanguage(@RequestBody SetTargetLanguageRequest request, HttpServletResponse response) {
         Integer token = request.getToken();
         String language = request.getTargetLanguage();
         Long id = sessionService.getIdByToken(token);
@@ -188,7 +189,7 @@ public class Controller {
             response.setStatus(400);
             return null;
         }
-        return user;
+        return new UserItem(user);
     }
 
     @PostMapping("/feed")

@@ -30,7 +30,6 @@ public class Comment {
         this.material = material;
     }
 
-    // TODO: the password is given away
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User author;

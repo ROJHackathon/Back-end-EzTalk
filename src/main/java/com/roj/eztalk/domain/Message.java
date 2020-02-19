@@ -26,7 +26,6 @@ public class Message implements Comparable<Message> {
     @NonNull
     private String content;
 
-    // TODO: the password is given away!!!
     @NonNull
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

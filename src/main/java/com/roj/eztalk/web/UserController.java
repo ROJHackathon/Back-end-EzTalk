@@ -24,10 +24,10 @@ public class UserController {
     UserService userService;
     // user
     @GetMapping("user/{id}")
-    public User getUser(@PathVariable Long id, HttpServletResponse response) {
+    public UserItem getUser(@PathVariable Long id, HttpServletResponse response) {
         Optional<User> user = userService.findById(id);
         if (user.isPresent()) {
-            return user.get();
+            return new UserItem(user.get());
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;

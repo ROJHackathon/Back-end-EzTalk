@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
+@Api(tags = {"Material Controller"})
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/api/")
 public class MaterialController {
@@ -36,6 +39,7 @@ public class MaterialController {
     MaterialService materialService;
 
     @GetMapping("/material/{id}")
+    @ApiOperation(value = "Get an material detail information by its material id", tags = "Material Management")
     public MaterialItem getMaterial(@PathVariable Long id, HttpServletResponse response) {
         try {
             response.setStatus(200);
@@ -47,6 +51,7 @@ public class MaterialController {
     }
 
     @PostMapping("/material/{id}/rate")
+    @ApiOperation(value = "Rate a material by its id", tags = "Material Management")
     public RatingItem rate(@RequestBody RateRequest request, @PathVariable Long id, HttpServletResponse response) {
         Integer token = request.getToken();
         Integer rate = request.getRate();
@@ -57,6 +62,7 @@ public class MaterialController {
     }
 
     @PostMapping("/material/{id}/comment")
+    @ApiOperation(value = "Make a comment on this material by id", tags = "Material Management")
     public CommentItem comment(@RequestBody CommentRequest request, @PathVariable Long id, HttpServletResponse response) {
         String content = request.getContent();
         Integer token = request.getToken();
@@ -78,6 +84,7 @@ public class MaterialController {
     }
 
     @GetMapping("/material/{id}/get-comments")
+    @ApiOperation(value = "get a list of comments made under current material by id", tags = {"Material Management","Admin Operations"})
     public List<CommentItem> getComments(@PathVariable Long id, HttpServletResponse response) {
         Optional<Material> opMaterial = materialService.findById(id);
         if (!opMaterial.isPresent()) {
@@ -90,6 +97,7 @@ public class MaterialController {
     }
 
     @PostMapping("/material/{id}/love")
+    @ApiOperation(value = "Love a material by its id", tags = "Material Management")
     public void love(@RequestBody Token token, @PathVariable Long id, HttpServletResponse response) {
         Material material = materialService.love(id);
         if (material == null) {

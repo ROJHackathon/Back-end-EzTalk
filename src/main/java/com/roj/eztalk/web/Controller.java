@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
+@Api(tags = {"Main View Operation"})
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/api/")
 public class Controller {
@@ -41,6 +44,7 @@ public class Controller {
 
     // testing cookies
     @GetMapping("hi")
+    @ApiOperation(value = "Test sending a cookie", tags="Cookie Management")
     public String hi(HttpServletResponse response){
         Cookie cookie = new Cookie("token", "123");
         response.addCookie(cookie);
@@ -49,6 +53,7 @@ public class Controller {
 
     // get user by token
     @GetMapping("get-user/{token}")
+    @ApiOperation(value = "Get User information by the client current token", tags={"User Management","Admin Operations"})
     public UserItem getUserByToken(@PathVariable Integer token, HttpServletResponse response) {
         if (!sessionService.isOnline(token)) {
             response.setStatus(404);
@@ -64,6 +69,7 @@ public class Controller {
 
     // sign-up
     @PostMapping("register")
+    @ApiOperation(value = "Register a user into the database", tags = "User Management")
     public UserItem register(@RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
         User user = userService.register(registerRequest.getUserName(), registerRequest.getPassword());
         if (user == null) {
@@ -76,6 +82,7 @@ public class Controller {
 
     // login
     @PostMapping("login")
+    @ApiOperation(value = "Login a user and generate a token valid for this login session only", tags = "User Management")
     public LoginResponse login(@RequestBody LoginRequest body, HttpServletResponse response) {
         LoginResponse responseBody = sessionService.login(body.getUserName(), body.getPassword());
         if (responseBody.getToken() == null) {
@@ -86,17 +93,20 @@ public class Controller {
 
     // logout
     @PostMapping("logout")
+    @ApiOperation(value = "Log out a user and destroy the current token", tags = "User Management")
     public LogoutResponse logout(@RequestBody Token token, HttpServletResponse response) {
         return sessionService.logout(token.getToken());
     }
 
     // get online users
     @GetMapping("get-online-users")
+    @ApiOperation(value = "Get all current online users", tags = "Admin Operations")
     public List<UserItem> getOnlineUsers() {
         return sessionService.getOnlineUsers().stream().map(x->new UserItem(x)).collect(Collectors.toList());
     }
 
     @PostMapping("/search-material")
+    @ApiOperation(value = "Search material by its keywords provided", tags = "Material Management")
     public List<MaterialItem> search(@RequestBody SearchRequest request, HttpServletResponse response) {
         try {
             response.setStatus(200);
@@ -108,6 +118,7 @@ public class Controller {
     }
 
     @GetMapping("/top-word")
+    @ApiOperation(value = "Get current top searches recently made", tags = "Material Management")
     public List<String> topWord() {
         // TODO: topword
         ArrayList<String> ret = new ArrayList<>();
@@ -125,6 +136,7 @@ public class Controller {
     }
 
     @PostMapping("/set-email")
+    @ApiOperation(value = "Set the user's email by using the current user token", tags = "User Management")
     public UserItem setEmail(@RequestBody SetEmailRequest request, HttpServletResponse response) {
         Integer token = request.getToken();
         String email = request.getEmail();
@@ -142,6 +154,7 @@ public class Controller {
     }
 
     @PostMapping("/set-preference")
+    @ApiOperation(value = "Set the user's preference by using the current user token", tags = "User Management")
     public UserItem setPreference(@RequestBody SetPreferenceRequest request, HttpServletResponse response) {
         Integer token = request.getToken();
         String preference = request.getPreference();
@@ -159,6 +172,7 @@ public class Controller {
     }
 
     @PostMapping("/set-language")
+    @ApiOperation(value = "Set the user's mother language by using the current user token", tags = "User Management")
     public UserItem setLanguage(@RequestBody SetLanguageRequest request, HttpServletResponse response) {
         Integer token = request.getToken();
         String language = request.getLanguage();
@@ -176,6 +190,7 @@ public class Controller {
     }
 
     @PostMapping("/set-target-language")
+    @ApiOperation(value = "Set the user's target language by using the current user token", tags = "User Management")
     public UserItem setTargetLanguage(@RequestBody SetTargetLanguageRequest request, HttpServletResponse response) {
         Integer token = request.getToken();
         String language = request.getTargetLanguage();
@@ -193,6 +208,7 @@ public class Controller {
     }
 
     @PostMapping("/feed")
+    @ApiOperation(value = "Get current feed recommendations for the user", tags = "Material Management")
     public List<MaterialItem> feed(@RequestBody FeedRequest request, HttpServletResponse response) {
         Optional<User> opUser = sessionService.getUserByToken(request.getToken());
         if (!opUser.isPresent()) {

@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
+@Api(tags = {"ChatRoom Management"})
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/api/")
 public class ChatroomController {
@@ -45,6 +48,7 @@ public class ChatroomController {
 
     // get chatroom list
     @GetMapping("chatroom-list")
+    @ApiOperation(value = "Get a list of all chatRooms", tags = "Admin Operations")
     public List<Chatroom> getChatroomList() {
         return chatroomService.getChatroomList();
     }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SetEmailRequest {
-    private Integer token;
+    private Long token;
     private String email;
 }

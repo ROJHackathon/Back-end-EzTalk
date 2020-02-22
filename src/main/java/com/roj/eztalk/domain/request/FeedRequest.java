@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class FeedRequest {
-    private Integer token;
+    private Long token;
     private Integer page;
 }

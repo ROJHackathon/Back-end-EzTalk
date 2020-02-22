@@ -20,10 +20,9 @@ public class RatingService {
     MaterialService materialService;
     @Autowired
     RatingRepository ratingRepository;
-    public Rating rate(Integer token, Long materialId, Integer rate){
-        Optional<User> opUser = sessionService.getUserByToken(token);
-        if(!opUser.isPresent()) return null;
-        User user = opUser.get();
+    public Rating rate(Long token, Long materialId, Integer rate){
+        User user = sessionService.getUserByToken(token);
+        if(user == null) return null;
 
         Optional<Material> opMaterial = materialService.findById(materialId);
         if(!opMaterial.isPresent()) return null;

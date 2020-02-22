@@ -56,18 +56,17 @@ public class ChatroomController {
     // send message
     @PostMapping("chatroom/{id}/say")
     public MessageItem say(@RequestBody SendMessageRequest request, @PathVariable Long id, HttpServletResponse response) {
-        Integer token = request.getToken();
+        Long token = request.getToken();
         if (!sessionService.isOnline(token)) {
             // the token is not valid
             response.setStatus(400);
             return null;
         }
-        Optional<User> opUser = sessionService.getUserByToken(token);
-        if (!opUser.isPresent()) {
+        User user = sessionService.getUserByToken(token);
+        if (user == null) {
             response.setStatus(400);
             return null;
         }
-        User user = opUser.get();
 
         Optional<Chatroom> opChatroom = chatroomService.findById(id);
         if (!opChatroom.isPresent()) {

@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SendMessageRequest {
     private String content;
-    private Integer token;
+    private Long token;
 }

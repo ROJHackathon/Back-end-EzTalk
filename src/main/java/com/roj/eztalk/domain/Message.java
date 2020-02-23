@@ -27,6 +27,9 @@ public class Message implements Comparable<Message> {
     private String content;
 
     @NonNull
+    private String dateTime;
+
+    @NonNull
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User author;

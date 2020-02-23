@@ -2,6 +2,7 @@ package com.roj.eztalk.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 import com.roj.eztalk.domain.Chatroom;
 import com.roj.eztalk.dao.ChatroomRepository;
@@ -37,7 +38,9 @@ public class ChatroomService {
     }
 
     public Message say(User user, Chatroom chatroom, String content){
-        Message message = messageRepository.save(new Message(content, user, chatroom));
+        LocalDateTime dateTime = LocalDateTime.now();
+        Message message = new Message(content, dateTime.toString(), user, chatroom);
+        message = messageRepository.save(message);
         return message;
     }
 }

@@ -2,9 +2,11 @@ package com.roj.eztalk.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
 import com.roj.eztalk.domain.Chatroom;
+import com.roj.eztalk.domain.ChatroomItem;
 import com.roj.eztalk.dao.ChatroomRepository;
 import com.roj.eztalk.domain.Message;
 import com.roj.eztalk.dao.MessageRepository;
@@ -29,8 +31,8 @@ public class ChatroomService {
         return chatroom;
     }
 
-    public List<Chatroom> getChatroomList() {
-        return chatroomRepository.findAll();
+    public List<ChatroomItem> getChatroomList() {
+        return chatroomRepository.findAll().stream().map(x->new ChatroomItem(x)).collect(Collectors.toList());
     }
 
     public Optional<Chatroom> findById(Long id) {

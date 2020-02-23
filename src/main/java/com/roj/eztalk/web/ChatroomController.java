@@ -49,7 +49,7 @@ public class ChatroomController {
     // get chatroom list
     @GetMapping("chatroom-list")
     @ApiOperation(value = "Get a list of all chatRooms", tags = "Admin Operations")
-    public List<Chatroom> getChatroomList() {
+    public List<ChatroomItem> getChatroomList() {
         return chatroomService.getChatroomList();
     }
 

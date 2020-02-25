@@ -207,9 +207,9 @@ public class Controller {
         return new UserItem(user);
     }
 
-    @PostMapping("/feed")
+    @PostMapping("/feed2")
     @ApiOperation(value = "Get current feed recommendations for the user", tags = "Material Management")
-    public List<MaterialItem> feed(@RequestBody FeedRequest request, HttpServletResponse response) {
+    public List<MaterialItem> feed2(@RequestBody FeedRequest request, HttpServletResponse response) {
         User user = sessionService.getUserByToken(request.getToken());
         if (user == null) {
             response.setStatus(400);
@@ -230,9 +230,9 @@ public class Controller {
         response.setStatus(200);
         return retval;
     }
-    @PostMapping("/feed2")
+    @PostMapping("/feed")
     @ApiOperation(value = "Get current feed recommendations for the user", tags = "Material Management")
-    public List<MaterialItem> feed2(@RequestBody FeedRequest request, HttpServletResponse response) {
+    public List<MaterialItem> feed(@RequestBody FeedRequest request, HttpServletResponse response) {
         return x5gonService.getFeed(request.getToken());
     }
 }

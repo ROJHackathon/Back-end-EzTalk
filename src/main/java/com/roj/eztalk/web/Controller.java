@@ -54,17 +54,17 @@ public class Controller {
     // get user by token
     @GetMapping("get-user/{token}")
     @ApiOperation(value = "Get User information by the client current token", tags={"User Management","Admin Operations"})
-    public UserItem getUserByToken(@PathVariable Integer token, HttpServletResponse response) {
+    public UserItem getUserByToken(@PathVariable Long token, HttpServletResponse response) {
         if (!sessionService.isOnline(token)) {
             response.setStatus(404);
             return null;
         }
-        Optional<User> opUser = sessionService.getUserByToken(token);
-        if (!opUser.isPresent()) {
+        User user = sessionService.getUserByToken(token);
+        if (user == null) {
             response.setStatus(404);
             return null;
         }
-        return new UserItem(opUser.get());
+        return new UserItem(user);
     }
 
     // sign-up
@@ -99,11 +99,11 @@ public class Controller {
     }
 
     // get online users
-    @GetMapping("get-online-users")
-    @ApiOperation(value = "Get all current online users", tags = "Admin Operations")
-    public List<UserItem> getOnlineUsers() {
-        return sessionService.getOnlineUsers().stream().map(x->new UserItem(x)).collect(Collectors.toList());
-    }
+    // @GetMapping("get-online-users")
+    // @ApiOperation(value = "Get all current online users", tags = "Admin Operations")
+    // public List<UserItem> getOnlineUsers() {
+    //     return sessionService.getOnlineUsers().stream().map(x->new UserItem(x)).collect(Collectors.toList());
+    // }
 
     @PostMapping("/search-material")
     @ApiOperation(value = "Search material by its keywords provided", tags = "Material Management")
@@ -138,7 +138,7 @@ public class Controller {
     @PostMapping("/set-email")
     @ApiOperation(value = "Set the user's email by using the current user token", tags = "User Management")
     public UserItem setEmail(@RequestBody SetEmailRequest request, HttpServletResponse response) {
-        Integer token = request.getToken();
+        Long token = request.getToken();
         String email = request.getEmail();
         Long id = sessionService.getIdByToken(token);
         if (id == null) {
@@ -156,7 +156,7 @@ public class Controller {
     @PostMapping("/set-preference")
     @ApiOperation(value = "Set the user's preference by using the current user token", tags = "User Management")
     public UserItem setPreference(@RequestBody SetPreferenceRequest request, HttpServletResponse response) {
-        Integer token = request.getToken();
+        Long token = request.getToken();
         String preference = request.getPreference();
         Long id = sessionService.getIdByToken(token);
         if (id == null) {
@@ -174,7 +174,7 @@ public class Controller {
     @PostMapping("/set-language")
     @ApiOperation(value = "Set the user's mother language by using the current user token", tags = "User Management")
     public UserItem setLanguage(@RequestBody SetLanguageRequest request, HttpServletResponse response) {
-        Integer token = request.getToken();
+        Long token = request.getToken();
         String language = request.getLanguage();
         Long id = sessionService.getIdByToken(token);
         if (id == null) {
@@ -192,7 +192,7 @@ public class Controller {
     @PostMapping("/set-target-language")
     @ApiOperation(value = "Set the user's target language by using the current user token", tags = "User Management")
     public UserItem setTargetLanguage(@RequestBody SetTargetLanguageRequest request, HttpServletResponse response) {
-        Integer token = request.getToken();
+        Long token = request.getToken();
         String language = request.getTargetLanguage();
         Long id = sessionService.getIdByToken(token);
         if (id == null) {
@@ -210,12 +210,11 @@ public class Controller {
     @PostMapping("/feed")
     @ApiOperation(value = "Get current feed recommendations for the user", tags = "Material Management")
     public List<MaterialItem> feed(@RequestBody FeedRequest request, HttpServletResponse response) {
-        Optional<User> opUser = sessionService.getUserByToken(request.getToken());
-        if (!opUser.isPresent()) {
+        User user = sessionService.getUserByToken(request.getToken());
+        if (user == null) {
             response.setStatus(400);
             return null;
         }
-        User user = opUser.get();
         String preference = user.getPreference();
         if(preference == null) {
             preference = "English";

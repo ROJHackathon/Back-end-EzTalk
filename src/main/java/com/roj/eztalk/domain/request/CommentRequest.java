@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentRequest {
-    private Integer token;
+    private Long token;
     private String content;
 }

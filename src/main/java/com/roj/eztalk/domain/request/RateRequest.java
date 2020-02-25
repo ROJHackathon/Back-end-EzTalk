@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RateRequest {
-   private Integer token;
+   private Long token;
    private Integer rate; 
 }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SetTargetLanguageRequest {
-    private Integer token;
+    private Long token;
     private String targetLanguage;
 }

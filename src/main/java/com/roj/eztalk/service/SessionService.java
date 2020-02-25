@@ -1,6 +1,5 @@
 package com.roj.eztalk.service;
 
-import java.time.LocalDateTime;
 import com.roj.eztalk.domain.*;
 import com.roj.eztalk.dao.*;
 import com.roj.eztalk.domain.response.LoginResponse;
@@ -9,99 +8,69 @@ import com.roj.eztalk.domain.response.LogoutResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 @Service
 public class SessionService {
     // for log in, log out, token generation and storing token-id pairs
-    // TODO: store session in database instead
-    private HashMap<Long, Integer> idTokenMap = new HashMap<>();
-    private HashMap<Integer, Long> tokenIdMap = new HashMap<>();
+    // private HashMap<Long, Integer> idTokenMap = new HashMap<>();
+    // private HashMap<Integer, Long> tokenIdMap = new HashMap<>();
 
     @Autowired
     UserService userService;
     @Autowired
     UserRepository userRepository;
-
-    /**
-     * generate
-     * @param name the user name
-     * @return a token for a session
-     */
-    public int getToken(String name) {
-        String dateTime = LocalDateTime.now().toString();
-        String userName = name;
-        Integer token = String.format("%s:%s", userName, dateTime).hashCode();
-        while (tokenIdMap.containsKey(token)) {
-            // dangerous code !!!
-            token++;
-        }
-        return token;
-    }
+    @Autowired
+    SessionRepository sessionRepository;
 
     public LoginResponse login(String userName, String password) {
-        Optional<User> user = userRepository.findByName(userName);
-        if (!user.isPresent()) {
+        Optional<User> opUser = userRepository.findByName(userName);
+        if (!opUser.isPresent()) {
             return new LoginResponse("User Name Does Not Exist", null, "");
         }
-        String p = user.get().getPassword();
+        String p = opUser.get().getPassword();
         if (!p.equals(password)) {
             return new LoginResponse("Invalid Password", null, "");
         }
-        int token = getToken(userName);
-        if (token == 0)
-            return new LoginResponse("Retry later", null, "");
-
-        Long uid = user.get().getId();
-        if (idTokenMap.containsKey(uid)) {
-            Integer oldToken = idTokenMap.get(uid);
+        User user = opUser.get();
+        Optional<Session> opSession = sessionRepository.findByUser(user);
+        if(opSession.isPresent()){
+            Long oldToken = opSession.get().getToken();
             return new LoginResponse("Already logged in", oldToken, userName);
         }
-        tokenIdMap.put(token, uid);
-        idTokenMap.put(uid, token);
+        Session session = new Session();
+        Long token = session.getToken();
+        session.setUser(user);
+        sessionRepository.save(session);
         return new LoginResponse("Login success", token, userName);
     }
 
-    public LogoutResponse logout(Integer token) {
-        if (!tokenIdMap.containsKey(token)) {
+    public LogoutResponse logout(Long token) {
+        Optional<Session> opSession = sessionRepository.findById(token);
+        if (opSession.isPresent()){
             return new LogoutResponse("not online");
         }
-        Long id = tokenIdMap.get(token);
-        idTokenMap.remove(id);
-        tokenIdMap.remove(token);
+        Session session = opSession.get();
+        sessionRepository.delete(session);
         return new LogoutResponse("logged out");
     }
 
-    public boolean isTokenValid(Integer token) {
-        return tokenIdMap.containsKey(token);
+    public User getUserByToken(Long token) {
+        Optional<Session> opSession = sessionRepository.findById(token);
+        if(opSession.isPresent()) return null;
+        Session session = opSession.get();
+        User user = session.getUser();
+        return user;
     }
 
-    public boolean isOnline(Integer token) {
-        return tokenIdMap.containsKey(token);
+    public Long getIdByToken(Long token) {
+        Optional<Session> opSession = sessionRepository.findById(token);
+        if(!opSession.isPresent()) return null;
+        return opSession.get().getUser().getId();
     }
 
-    public List<User> getOnlineUsers() {
-        List<User> retval = new ArrayList<>();
-        for (Long uid : idTokenMap.keySet()) {
-            Optional<User> user = userRepository.findById(uid);
-            if (user.isPresent())
-                retval.add(user.get());
-        }
-        return retval;
-    }
-
-    public Optional<User> getUserByToken(Integer token) {
-        Long id = this.tokenIdMap.get(token);
-        return userRepository.findById(id);
-    }
-
-    public Long getIdByToken(Integer token) {
-        if(!tokenIdMap.containsKey(token)){
-            return null;
-        }
-        return this.tokenIdMap.get(token);
+    public boolean isOnline(Long token){
+        Optional<Session> opSession = sessionRepository.findById(token);
+        return opSession.isPresent();
     }
 }

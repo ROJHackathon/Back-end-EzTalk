@@ -53,7 +53,7 @@ public class MaterialController {
     @PostMapping("/material/{id}/rate")
     @ApiOperation(value = "Rate a material by its id", tags = "Material Management")
     public RatingItem rate(@RequestBody RateRequest request, @PathVariable Long id, HttpServletResponse response) {
-        Integer token = request.getToken();
+        Long token = request.getToken();
         Integer rate = request.getRate();
         Rating rating = ratingService.rate(token, id, rate);
         if (rating == null)
@@ -65,7 +65,7 @@ public class MaterialController {
     @ApiOperation(value = "Make a comment on this material by id", tags = "Material Management")
     public CommentItem comment(@RequestBody CommentRequest request, @PathVariable Long id, HttpServletResponse response) {
         String content = request.getContent();
-        Integer token = request.getToken();
+        Long token = request.getToken();
 
         Optional<Material> opMaterial = materialService.findById(id);
         if (!opMaterial.isPresent()) {
@@ -73,13 +73,13 @@ public class MaterialController {
             return null;
         }
 
-        Optional<User> opUser = sessionService.getUserByToken(token);
-        if (!opUser.isPresent()) {
+        User user = sessionService.getUserByToken(token);
+        if (user == null) {
             response.setStatus(400);
             return null;
         }
 
-        Comment comment = materialService.comment(opUser.get(), opMaterial.get(), content);
+        Comment comment = materialService.comment(user, opMaterial.get(), content);
         return new CommentItem(comment);
     }
 

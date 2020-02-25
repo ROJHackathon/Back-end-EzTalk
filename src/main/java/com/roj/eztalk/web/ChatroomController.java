@@ -50,7 +50,15 @@ public class ChatroomController {
     @GetMapping("chatroom-list")
     @ApiOperation(value = "Get a list of all chatRooms", tags = "Admin Operations")
     public List<ChatroomItem> getChatroomList() {
-        return chatroomService.getChatroomList();
+        return chatroomService.getPublicChatroomList();
+    }
+
+    @PostMapping("private-chatroom-list")
+    public List<ChatroomItem> getPrivateChatroomList(@RequestBody PrivateChatroomRequest request, HttpServletResponse response) {
+        Long id = sessionService.getIdByToken(request.token);
+        User user = sessionService.getUserByToken(request.token);
+        List<ChatroomItem> ret =  chatroomService.getPrivateChatroomList(id);
+        return ret;
     }
 
     // send message

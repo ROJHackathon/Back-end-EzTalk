@@ -18,4 +18,7 @@ public interface ChatroomRepository extends CrudRepository<Chatroom, Long> {
 
     @Query("SELECT c FROM Chatroom c")
     public List<Chatroom> findAll();
+
+    @Query("SELECT c FROM Chatroom c WHERE c.type = :type")
+    public List<Chatroom> findByType(@Param("type") String type);
 }

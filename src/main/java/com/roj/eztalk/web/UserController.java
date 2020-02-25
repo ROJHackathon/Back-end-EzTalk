@@ -1,7 +1,9 @@
 package com.roj.eztalk.web;
 
 import com.roj.eztalk.service.*;
+import com.roj.eztalk.dao.ChatroomRepository;
 import com.roj.eztalk.domain.*;
+import com.roj.eztalk.domain.request.FriendRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,6 +30,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    SessionService sessionService;
+    @Autowired
+    ChatroomService chatroomService;
     // user
     @GetMapping("user/{id}")
     @ApiOperation(value = "Get an material detail information by its material id", tags = "Admin Operations")
@@ -63,5 +72,14 @@ public class UserController {
         retval.add("history 4");
         retval.add("history 5");
         return retval;
+    }
+
+    // befriend
+    @PostMapping("user/{id}/friend")
+    public void befriend(@RequestBody FriendRequest request, @PathVariable Long id, HttpServletResponse response){
+        Long token = request.token;
+        Long uid = sessionService.getUserByToken(token).getId();
+        Chatroom chatroom = chatroomService.befriend(uid, id);
+        if(chatroom == null) response.setStatus(400);
     }
 }

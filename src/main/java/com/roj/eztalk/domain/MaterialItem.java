@@ -1,6 +1,7 @@
 package com.roj.eztalk.domain;
 
 import com.roj.eztalk.domain.json.MaterialJson;
+import com.roj.eztalk.domain.json.WeightedMaterialJson;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +29,18 @@ public class MaterialItem {
     this.title = json.title;
     this.description = json.description;
     this.language = json.language;
-    // this.provider = json.provider;
+    this.url = json.url;
+    this.type = json.type;
+    this.mimetype = json.mimetype;
+
+    this.coverUrl = material.getCoverUrl();
+    this.love = material.getLove();
+  }
+  public MaterialItem(WeightedMaterialJson json, Material material){
+    this.id = Long.parseLong(json.material_id);
+    this.title = json.title;
+    this.description = json.description;
+    this.language = json.language;
     this.url = json.url;
     this.type = json.type;
     this.mimetype = json.mimetype;

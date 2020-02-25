@@ -6,6 +6,7 @@ import com.roj.eztalk.domain.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,6 +33,18 @@ public class UserController {
         Optional<User> user = userService.findById(id);
         if (user.isPresent()) {
             return new UserItem(user.get());
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
+        }
+    }
+
+    @GetMapping("user-rated/{id}")
+    // @ApiOperation(value = "Get an material detail information by its material id", tags = "Admin Operations")
+    public List<RatingItem> getUserRated(@PathVariable Long id, HttpServletResponse response) {
+        Optional<User> user = userService.findById(id);
+        if (user.isPresent()) {
+            return user.get().getRatings().stream().map(x->new RatingItem(x)).collect(Collectors.toList());
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;

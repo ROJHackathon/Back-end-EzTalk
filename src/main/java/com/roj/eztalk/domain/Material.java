@@ -1,5 +1,6 @@
 package com.roj.eztalk.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -29,8 +30,12 @@ public class Material {
 
 
   @OneToMany(mappedBy = "material")
-  private List<Comment> comments;
+  private List<Comment> comments = new ArrayList<>();
 
   @OneToMany(mappedBy = "material")
-  private List<Rating> ratings;
+  private List<Rating> ratings = new ArrayList<>();
+
+  public void addRating(Rating rating){
+    this.ratings.add(rating);
+  }
 }

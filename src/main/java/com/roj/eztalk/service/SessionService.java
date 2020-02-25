@@ -39,9 +39,9 @@ public class SessionService {
             return new LoginResponse("Already logged in", oldToken, userName);
         }
         Session session = new Session();
-        Long token = session.getToken();
         session.setUser(user);
-        sessionRepository.save(session);
+        session = sessionRepository.save(session);
+        Long token = session.getToken();
         return new LoginResponse("Login success", token, userName);
     }
 
@@ -57,7 +57,7 @@ public class SessionService {
 
     public User getUserByToken(Long token) {
         Optional<Session> opSession = sessionRepository.findById(token);
-        if(opSession.isPresent()) return null;
+        if(!opSession.isPresent()) return null;
         Session session = opSession.get();
         User user = session.getUser();
         return user;

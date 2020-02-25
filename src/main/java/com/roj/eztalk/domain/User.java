@@ -61,7 +61,11 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "author")
-    private List<Rating> ratings;
+    private List<Rating> ratings = new ArrayList<>();
+
+    public void addRating(Rating rating){
+        this.ratings.add(rating);
+    }
 
     @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

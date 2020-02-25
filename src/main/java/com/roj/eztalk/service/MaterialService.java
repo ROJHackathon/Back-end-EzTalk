@@ -7,6 +7,8 @@ import com.roj.eztalk.dao.CommentRepository;
 import com.roj.eztalk.domain.Material;
 import com.roj.eztalk.dao.MaterialRepository;
 import com.roj.eztalk.domain.User;
+import com.roj.eztalk.domain.json.MaterialJson;
+import com.roj.eztalk.domain.json.WeightedMaterialJson;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ public class MaterialService {
 
     @Autowired
     CommentRepository commentRepository;
+    
+    @Autowired
+    UtilService utilService;
     
     public Optional<Material> findById(Long id){
         return materialRepository.findById(id);
@@ -40,5 +45,27 @@ public class MaterialService {
         int loves = material.getLove();
         material.setLove(loves + 1);
         return materialRepository.save(material);
+    }
+
+    public Material insertIfNotExists(MaterialJson materialJson){
+        long id = Long.parseLong(materialJson.material_id);
+        Optional<Material> material = materialRepository.findById(id);
+        if(!material.isPresent()){
+            Material newMaterial = new Material(id, utilService.generateCoverUrl(), 0);
+            return materialRepository.save(newMaterial);
+        } else {
+            return material.get();
+        }
+    }
+
+    public Material insertIfNotExists(WeightedMaterialJson materialJson){
+        long id = Long.parseLong(materialJson.material_id);
+        Optional<Material> material = materialRepository.findById(id);
+        if(!material.isPresent()){
+            Material newMaterial = new Material(id, utilService.generateCoverUrl(), 0);
+            return materialRepository.save(newMaterial);
+        } else {
+            return material.get();
+        }
     }
 }

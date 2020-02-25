@@ -56,8 +56,10 @@ public class MaterialController {
         Long token = request.getToken();
         Integer rate = request.getRate();
         Rating rating = ratingService.rate(token, id, rate);
-        if (rating == null)
+        if (rating == null){
             response.setStatus(400);
+            return null;
+        }
         return new RatingItem(rating);
     }
 

@@ -230,4 +230,9 @@ public class Controller {
         response.setStatus(200);
         return retval;
     }
+    @PostMapping("/feed2")
+    @ApiOperation(value = "Get current feed recommendations for the user", tags = "Material Management")
+    public List<MaterialItem> feed2(@RequestBody FeedRequest request, HttpServletResponse response) {
+        return x5gonService.getFeed(request.getToken());
+    }
 }

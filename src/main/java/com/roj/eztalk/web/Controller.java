@@ -1,6 +1,10 @@
 package com.roj.eztalk.web;
 
 import com.roj.eztalk.service.*;
+import com.roj.eztalk.util.Http;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roj.eztalk.domain.*;
 import com.roj.eztalk.domain.request.*;
 import com.roj.eztalk.domain.response.*;
@@ -25,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
-@Api(tags = {"Main View Operation"})
+@Api(tags = { "Main View Operation" })
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/api/")
 public class Controller {
@@ -44,8 +48,8 @@ public class Controller {
 
     // testing cookies
     @GetMapping("hi")
-    @ApiOperation(value = "Test sending a cookie", tags="Cookie Management")
-    public String hi(HttpServletResponse response){
+    @ApiOperation(value = "Test sending a cookie", tags = "Cookie Management")
+    public String hi(HttpServletResponse response) {
         Cookie cookie = new Cookie("token", "123");
         response.addCookie(cookie);
         return "hi";
@@ -53,7 +57,8 @@ public class Controller {
 
     // get user by token
     @GetMapping("get-user/{token}")
-    @ApiOperation(value = "Get User information by the client current token", tags={"User Management","Admin Operations"})
+    @ApiOperation(value = "Get User information by the client current token", tags = { "User Management",
+            "Admin Operations" })
     public UserItem getUserByToken(@PathVariable Long token, HttpServletResponse response) {
         if (!sessionService.isOnline(token)) {
             response.setStatus(404);
@@ -100,9 +105,11 @@ public class Controller {
 
     // get online users
     // @GetMapping("get-online-users")
-    // @ApiOperation(value = "Get all current online users", tags = "Admin Operations")
+    // @ApiOperation(value = "Get all current online users", tags = "Admin
+    // Operations")
     // public List<UserItem> getOnlineUsers() {
-    //     return sessionService.getOnlineUsers().stream().map(x->new UserItem(x)).collect(Collectors.toList());
+    // return sessionService.getOnlineUsers().stream().map(x->new
+    // UserItem(x)).collect(Collectors.toList());
     // }
 
     @PostMapping("/search-material")
@@ -216,13 +223,13 @@ public class Controller {
             return null;
         }
         String preference = user.getPreference();
-        if(preference == null) {
+        if (preference == null) {
             preference = "English";
         }
         Integer page = request.getPage();
         List<MaterialItem> retval;
         try {
-             retval = x5gonService.recommendMaterial(preference, page);
+            retval = x5gonService.recommendMaterial(preference, page);
         } catch (Exception e) {
             response.setStatus(400);
             return null;
@@ -230,9 +237,38 @@ public class Controller {
         response.setStatus(200);
         return retval;
     }
+
     @PostMapping("/feed")
     @ApiOperation(value = "Get current feed recommendations for the user", tags = "Material Management")
     public List<MaterialItem> feed(@RequestBody FeedRequest request, HttpServletResponse response) {
         return x5gonService.getFeed(request.getToken());
+    }
+
+    @PostMapping("/translate")
+    public String translate(@RequestBody TranslateRequest request, HttpServletResponse response) {
+        String text = request.text;
+
+        String url = "https://api.eu-gb.language-translator.watson.cloud.ibm.com/instances/4c79d3b6-b846-4ca7-86fa-2a09024e43d4/v3/translate?version=2018-05-01";
+        String key = "LZZVFYbcggzSeDZ2Kbh30buPxh4avQPPHuEkFRdze0Q8";
+
+        ObjectMapper mapper = new ObjectMapper();
+        TranslateJson json = new TranslateJson();
+        json.model_id = "en-fr";
+        json.text.add(text);
+        try {
+            String jsonString = mapper.writeValueAsString(json);
+
+            String res = Http.postAuthentication(url, jsonString, "apikey", key);
+
+            JsonNode rootNode = mapper.readTree(res);
+            JsonNode translations = rootNode.get("translations");
+
+            TranslatedTextJson[] translated = mapper.readValue(translations.toString(),TranslatedTextJson[].class);
+            if(translated.length == 0) return null;
+            return translated[0].translation;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 }

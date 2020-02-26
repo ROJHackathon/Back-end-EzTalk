@@ -79,6 +79,17 @@ public class ChatroomService {
         List<User> userList = new ArrayList<>();
         User user1 = optionalUser1.get();
         User user2 = optionalUser2.get();
+
+        // check already friend
+        List<Chatroom> cList = user1.getMemberOf();
+        for(Chatroom c : cList){
+            for(User u : c.getMembers()){
+                if(u.getId() == uid2){
+                    return c;
+                }
+            }
+        }
+
         userList.add(optionalUser1.get());
         userList.add(optionalUser2.get());
         chatroom.setMembers(userList);
